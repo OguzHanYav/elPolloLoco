@@ -1,0 +1,3 @@
+# Mac-spezifische Metadaten-Dateien ignorieren
+._*
+.DS_Store
