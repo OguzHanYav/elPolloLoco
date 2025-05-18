@@ -4,17 +4,24 @@ class World {
   clouds = [new Cloud()];
   backgroundObjects = [
     new BackgroundObject("img/5_background/layers/air.png", 0),
-    new BackgroundObject("img/5_background/layers/3_third_layer/1.png",0),
-    new BackgroundObject("img/5_background/layers/2_second_layer/1.png",0),
-    new BackgroundObject("img/5_background/layers/1_first_layer/1.png", 0)
+    new BackgroundObject("img/5_background/layers/3_third_layer/1.png", 0),
+    new BackgroundObject("img/5_background/layers/2_second_layer/1.png", 0),
+    new BackgroundObject("img/5_background/layers/1_first_layer/1.png", 0),
   ];
   ctx;
   canvas;
+  keyboard;
 
-  constructor(canvas) {
+  constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
     this.canvas = canvas;
+    this.keyboard = keyboard;
     this.draw();
+    this.setWorld();
+  }
+
+  setWorld() {
+    this.character.world = this;
   }
 
   draw() {
@@ -24,16 +31,14 @@ class World {
     this.addObjectsToMap(this.clouds);
     this.addObjectsToMap(this.enemies);
 
-
-
     let self = this;
     requestAnimationFrame(function () {
       self.draw();
     });
   }
 
-// Eine forEach Schleife für alle Objekte
-  addObjectsToMap(objects){
+  // Eine forEach Schleife für alle Objekte
+  addObjectsToMap(objects) {
     objects.forEach((o) => {
       this.addToMap(o);
     });
