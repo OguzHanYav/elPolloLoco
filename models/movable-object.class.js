@@ -31,4 +31,11 @@ class MovableObject {
       this.x -= this.speed; // Minus 0.15 px von der x Koordinate
     }, 1000 / 60); // 60 x pro Sekunde
   }
+
+  playAnimation(images){
+        let i = this.currentImage % this.IMAGES_WALKING.length;
+        let path = images[i];
+        this.img = this.imageCache[path];
+        this.currentImage++;
+  }
 }
