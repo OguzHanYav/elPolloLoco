@@ -20,13 +20,12 @@ class World {
 
   draw() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.ctx.translate(this.camera_x, 0 );
+    this.ctx.translate(this.camera_x, 0);
     this.addObjectsToMap(this.level.backgroundObjects);
     this.addToMap(this.character);
     this.addObjectsToMap(this.level.clouds);
     this.addObjectsToMap(this.level.enemies);
-    this.ctx.translate(-this.camera_x,0);
-
+    this.ctx.translate(-this.camera_x, 0);
 
     let self = this;
     requestAnimationFrame(function () {
@@ -43,15 +42,23 @@ class World {
 
   addToMap(mo) {
     if (mo.otherDircetion) {
-      this.ctx.save();
-      this.ctx.translate(mo.widht, 0); // Spiegelverkehrt
-      this.ctx.scale(-1,1); // Verschiebung des Elements
-      mo.x = mo.x * -1; // Auf der X Achse
+      this.flipImage(mo);
     }
-    this.ctx.drawImage(mo.img, mo.x, mo.y, mo.widht, mo.height);
+    mo.draw(this.ctx);
+    mo.drawFrame(this.ctx);
     if (mo.otherDircetion) {
-      mo.x= mo.x * -1;
-      this.ctx.restore();
+     this.flipImageBack(mo);
     }
+  }
+   flipImage(mo){
+    this.ctx.save();
+      this.ctx.translate(mo.widht, 0); // Spiegelverkehrt
+      this.ctx.scale(-1, 1); // Verschiebung des Elements
+      mo.x = mo.x * -1; // Auf der X Achse
+  }
+
+  flipImageBack(mo){
+     mo.x = mo.x * -1;
+      this.ctx.restore();
   }
 }

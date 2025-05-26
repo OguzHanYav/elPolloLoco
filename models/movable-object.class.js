@@ -21,6 +21,20 @@ class MovableObject {
     }, 1000 / 25);
   }
 
+  draw(ctx) {
+    ctx.drawImage(this.img, this.x, this.y, this.widht, this.height);
+  }
+
+  drawFrame(ctx) {
+    if (this instanceof Character || this instanceof Chicken) {
+      ctx.beginPath();
+      ctx.lineWidth = "4";
+      ctx.strokeStyle = "blue";
+      ctx.rect(this.x, this.y, this.widht, this.height);
+      ctx.stroke();
+    }
+  }
+
   isAboveGround() {
     return this.y < 180;
   }
@@ -43,7 +57,7 @@ class MovableObject {
   }
 
   moveLeft() {
-      this.x -= this.speed;
+    this.x -= this.speed;
   }
 
   playAnimation(images) {
