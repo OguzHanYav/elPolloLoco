@@ -1,7 +1,7 @@
 class Character extends MovableObject {
   y = 80;
   height = 250;
-  widht = 120;
+  width = 120;
   world;
   speed = 10;
   offset = {
@@ -39,6 +39,7 @@ class Character extends MovableObject {
     this.applyGravity();
     this.animate();
   }
+  
 
   animate() {
     //Camera moving

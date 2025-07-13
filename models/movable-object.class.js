@@ -3,7 +3,7 @@ class MovableObject {
   y = 250;
   img;
   height = 150;
-  widht = 100;
+  width = 100;
   imageCache = {};
   currentImage = 0;
   speed = 0.15;
@@ -29,7 +29,7 @@ class MovableObject {
   }
 
   draw(ctx) {
-    ctx.drawImage(this.img, this.x, this.y, this.widht, this.height);
+    ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
   }
 
   drawFrame(ctx) {
@@ -37,7 +37,7 @@ class MovableObject {
       ctx.beginPath();
       ctx.lineWidth = "4";
       ctx.strokeStyle = "blue";
-      ctx.rect(this.x, this.y, this.widht, this.height);
+      ctx.rect(this.x, this.y, this.width, this.height);
       ctx.stroke();
     }
   }
@@ -79,17 +79,17 @@ class MovableObject {
   }
 
   isColliding(mo) {
-    return (
-      this.x + this.widht > mo.x &&
-      this.y + this.height > mo.y &&
-      this.x < mo.x &&
-      this.y < mo.y + mo.height
-    );
-    // return ( this.x + this.widht - this.offset.right > mo.x + mo.offset.left &&
-    //   this.y + this.height - this.offset.bottom > mo.y + mo.offset.top &&
-    //   this.x + this.offset.left < mo.x + mo.width - mo.offset.right &&
-    //   this.y + this.offset.top < mo.y + mo.height - mo.offset.bottom
+    // return (
+    //   this.x + this.width > mo.x &&
+    //   this.y + this.height > mo.y &&
+    //   this.x < mo.x &&
+    //   this.y < mo.y + mo.height
     // );
+    return ( this.x + this.width - this.offset.right > mo.x + mo.offset.left &&
+      this.y + this.height - this.offset.bottom > mo.y + mo.offset.top &&
+      this.x + this.offset.left < mo.x + mo.width - mo.offset.right &&
+      this.y + this.offset.top < mo.y + mo.height - mo.offset.bottom
+    );
   }
 }
    

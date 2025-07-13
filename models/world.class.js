@@ -64,7 +64,7 @@ class World {
   }
    flipImage(mo){
     this.ctx.save();
-      this.ctx.translate(mo.widht, 0); // Spiegelverkehrt
+      this.ctx.translate(mo.width, 0); // Spiegelverkehrt
       this.ctx.scale(-1, 1); // Verschiebung des Elements
       mo.x = mo.x * -1; // Auf der X Achse
   }
