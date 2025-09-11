@@ -1,5 +1,4 @@
 class MovableObject extends DrawableObject {
-
   speed = 0.15;
   otherDircetion;
   speedY = 0;
@@ -25,32 +24,9 @@ class MovableObject extends DrawableObject {
     }, 1000 / 25);
   }
 
- 
-
-  drawFrame(ctx) {
-    if (this instanceof Character || this instanceof Chicken) {
-      ctx.beginPath();
-      ctx.lineWidth = "4";
-      ctx.strokeStyle = "blue";
-      ctx.rect(this.x, this.y, this.width, this.height);
-      ctx.stroke();
-    }
-    ctx.beginPath();
-    ctx.lineWidth = "4";
-    ctx.strokeStyle = "red";
-    ctx.rect(
-      this.x + this.offset.left,
-      this.y + this.offset.top,
-      this.width - this.offset.left - this.offset.right,
-      this.height - this.offset.top - this.offset.bottom
-    );
-    ctx.stroke();
-  }
-
   isAboveGround() {
     return this.y < 180;
   }
-
 
   moveRight() {
     this.x += this.speed;
@@ -87,12 +63,12 @@ class MovableObject extends DrawableObject {
       this.lastHit = new Date().getTime();
     }
   }
-  isDead(){
+  isDead() {
     return this.energy == 0;
   }
-  isHurt(){
+  isHurt() {
     let timepassed = new Date().getTime() - this.lastHit;
     timepassed = timepassed / 1000;
-    return timepassed < 0.1; 
+    return timepassed < 0.1;
   }
 }
