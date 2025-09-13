@@ -6,6 +6,8 @@ class World {
   keyboard;
   camera_x = 0;
   statusBar = new StatusBar();
+  coinBar = new CoinsBar();
+  bottleBar = new BottleBar ();
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
     this.canvas = canvas;
@@ -39,6 +41,8 @@ class World {
     //Space for fixed object
     this.ctx.translate(-this.camera_x, 0);
     this.addToMap(this.statusBar);
+    this.addToMap(this.coinBar);
+    this.addToMap(this.bottleBar);
     this.ctx.translate(this.camera_x, 0);
 
     this.addToMap(this.character);
@@ -67,7 +71,7 @@ class World {
     mo.drawFrame(this.ctx);
     if (mo.otherDircetion) {
      this.flipImageBack(mo);
-    }
+     }
   }
    flipImage(mo){
     this.ctx.save();
