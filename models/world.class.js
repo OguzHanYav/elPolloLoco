@@ -36,6 +36,12 @@ class World {
       new CollectableObject(300,360),
       new CollectableObject(600,360),
       new CollectableObject(900,360),
+      new CollectableObjectCoin(400, 360),
+      new CollectableObjectCoin(500, 260),
+      new CollectableObjectCoin(600, 160),
+      new CollectableObjectCoin(800, 150),
+      new CollectableObjectCoin(1000, 360),
+      new CollectableObjectCoin(1100, 360),
     ];
   }
 
