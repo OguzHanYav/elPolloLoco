@@ -53,9 +53,11 @@ class World {
   }
 
   checkThrowObjects() {
-    if (this.keyboard.D) {
+    if (this.keyboard.D && this.bottlesCollected > 0) {
       let bottle = new ThrowableObject(this.character.x, this.character.y);
       this.throwableObjects.push(bottle);
+      this.bottlesCollected --;
+      this.bottleBar.setPercentage((this.bottlesCollected/this.maxBottles)*100);
     }
   }
   checkCollectableCollisions(){
