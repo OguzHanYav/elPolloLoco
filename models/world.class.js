@@ -9,12 +9,18 @@ class World {
   coinBar = new CoinsBar();
   bottleBar = new BottleBar();
   throwableObjects = [];
+  coinsCollected = 0;
+  bottlesCollected = 0;
 
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
     this.canvas = canvas;
     this.keyboard = keyboard;
     this.collectables = this.creatCollectables();
+
+    this.maxCoins = this.collectables.filter(c => c instanceof CollectableObjectCoin).length;
+    this.maxBottles = this.collectables.filter(c => c instanceof CollectableObjectBottle).length;
+
     this.draw();
     this.setWorld();
     this.run();
@@ -28,14 +34,15 @@ class World {
     setInterval(() => {
       this.checkCollisions();
       this.checkThrowObjects();
+      this.checkCollectableCollisions();
     }, 200);
   }
 
   creatCollectables(){
     return [
-      new CollectableObject(300,360),
-      new CollectableObject(600,360),
-      new CollectableObject(900,360),
+      new CollectableObjectBottle(300,360),
+      new CollectableObjectBottle(600,360),
+      new CollectableObjectBottle(900,360),
       new CollectableObjectCoin(400, 360),
       new CollectableObjectCoin(500, 260),
       new CollectableObjectCoin(600, 160),
@@ -50,6 +57,23 @@ class World {
       let bottle = new ThrowableObject(this.character.x, this.character.y);
       this.throwableObjects.push(bottle);
     }
+  }
+  checkCollectableCollisions(){
+    this.collectables.forEach((item, index)=> {
+      if (this.character.isColliding(item)) {
+        //Coins
+        if (item instanceof CollectableObjectCoin) {
+          this.coinsCollected++;
+          this.coinBar.setPercentage((this.coinsCollected / this.maxCoins) *100);
+        }
+           //Bottles
+        if (item instanceof CollectableObjectBottle) {
+          this.bottlesCollected++;
+          this.bottleBar.setPercentage((this.bottlesCollected / this.maxBottles) *100);
+        }
+        this.collectables.splice(index,1);
+      }
+    });
   }
   checkCollisions() {
     this.level.enemies.forEach((enemy) => {
