@@ -18,8 +18,12 @@ class World {
     this.keyboard = keyboard;
     this.collectables = this.creatCollectables();
 
-    this.maxCoins = this.collectables.filter(c => c instanceof CollectableObjectCoin).length;
-    this.maxBottles = this.collectables.filter(c => c instanceof CollectableObjectBottle).length;
+    this.maxCoins = this.collectables.filter(
+      (c) => c instanceof CollectableObjectCoin
+    ).length;
+    this.maxBottles = this.collectables.filter(
+      (c) => c instanceof CollectableObjectBottle
+    ).length;
 
     this.draw();
     this.setWorld();
@@ -38,42 +42,69 @@ class World {
     }, 200);
   }
 
-  creatCollectables(){
+  creatCollectables() {
     return [
-      new CollectableObjectBottle(300,360),
-      new CollectableObjectBottle(600,360),
-      new CollectableObjectBottle(900,360),
+      new CollectableObjectBottle(300, 360),
+      new CollectableObjectBottle(600, 360),
+      new CollectableObjectBottle(900, 360),
+      new CollectableObjectBottle(1000, 360),
+      new CollectableObjectBottle(1050, 360),
+      new CollectableObjectBottle(1100, 360),
+      new CollectableObjectBottle(1200, 360),
+      new CollectableObjectBottle(1300, 360),
+      new CollectableObjectBottle(1400, 360),
+      new CollectableObjectBottle(1500, 360),
       new CollectableObjectCoin(400, 360),
       new CollectableObjectCoin(500, 260),
       new CollectableObjectCoin(600, 160),
       new CollectableObjectCoin(800, 150),
       new CollectableObjectCoin(1000, 360),
-      new CollectableObjectCoin(1100, 360),
+      new CollectableObjectCoin(1150, 360),
+      new CollectableObjectCoin(1300, 360),
+      new CollectableObjectCoin(1400, 360),
+      new CollectableObjectCoin(1500, 360),
+      new CollectableObjectCoin(1600, 360),
     ];
   }
 
   checkThrowObjects() {
     if (this.keyboard.D && this.bottlesCollected > 0) {
-      let bottle = new ThrowableObject(this.character.x, this.character.y);
+      // Startpoint to throw
+      let offsetX = this.character.otherDircetion ? -30 : 80;
+      let offsetY = 30;
+      let bottleX = this.character.x + offsetX;
+      let bottleY = this.character.y + offsetY;
+      // Throw dircetion
+      let bottle = new ThrowableObject(
+        bottleX,
+        bottleY,
+        this.character.otherDircetion
+      );
       this.throwableObjects.push(bottle);
-      this.bottlesCollected --;
-      this.bottleBar.setPercentage((this.bottlesCollected/this.maxBottles)*100);
+      this.bottlesCollected--;
+      this.bottleBar.setPercentage(
+        (this.bottlesCollected / this.maxBottles) * 100
+      );
     }
   }
-  checkCollectableCollisions(){
-    this.collectables.forEach((item, index)=> {
+  checkCollectableCollisions() {
+    this.collectables.forEach((item, index) => {
       if (this.character.isColliding(item)) {
         //Coins
         if (item instanceof CollectableObjectCoin) {
           this.coinsCollected++;
-          this.coinBar.setPercentage((this.coinsCollected / this.maxCoins) *100);
+          this.coinBar.setPercentage(
+            (this.coinsCollected / this.maxCoins) * 100
+          );
         }
-           //Bottles
+        //Bottles
         if (item instanceof CollectableObjectBottle) {
           this.bottlesCollected++;
-          this.bottleBar.setPercentage((this.bottlesCollected / this.maxBottles) *100);
+          this.bottleBar.setPercentage(
+            (this.bottlesCollected / this.maxBottles) * 100
+          );
         }
-        this.collectables.splice(index,1);
+        this.collectables.splice(index, 1);
       }
     });
   }
@@ -82,7 +113,6 @@ class World {
       if (this.character.isColliding(enemy)) {
         this.character.hit();
         this.statusBar.setPercentage(this.character.energy);
-        console.log("Collision with Character, energy ", this.character.energy);
       }
     });
   }
