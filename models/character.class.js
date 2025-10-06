@@ -87,8 +87,10 @@ class Character extends MovableObject {
         }
       }
       if (this.world.keyboard.SPACE && !this.isAboveGround()) {
+        this.world.playSound(this.world.jumpSound);
         this.jump();
       }
+
     }, 50);
   }
 }

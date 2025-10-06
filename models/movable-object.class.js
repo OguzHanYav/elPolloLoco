@@ -5,14 +5,12 @@ class MovableObject extends DrawableObject {
   acceleration = 2.5;
   energy = 100;
   lastHit = 0;
-  jumpSound = new Audio(`audio/jumping_01.wav`);
-  throwSound = new Audio(`audio/throwBottle.wav`);
+
   offset = {
     top: 0,
     bottom: 0,
     left: 0,
     right: 0,
-    
   };
 
   applyGravity() {
@@ -29,7 +27,7 @@ class MovableObject extends DrawableObject {
     if (this instanceof ThrowableObject) {
       return true;
     } else {
-    return this.y < 180;
+      return this.y < 180;
     }
   }
 
@@ -50,8 +48,6 @@ class MovableObject extends DrawableObject {
 
   jump() {
     this.speedY = 30;
-    this.jumpSound.currentTime = 0;
-    this.jumpSound.play();
   }
 
   isColliding(mo) {

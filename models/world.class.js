@@ -5,12 +5,21 @@ class World {
   canvas;
   keyboard;
   camera_x = 0;
+  //Statusbars
   statusBar = new StatusBar();
   coinBar = new CoinsBar();
   bottleBar = new BottleBar();
+  //Counters
   throwableObjects = [];
   coinsCollected = 0;
   bottlesCollected = 0;
+  //Sounds
+  jumpSound = new Audio('audio/jumping_01.wav');
+  throwSound = new Audio('audio/throwBottle.wav');
+  collectBottleSound = new Audio('audio/collectBottle.wav');
+  collectCoinSound = new Audio("audio/collectCoin.wav");
+  hitCharacterSound = new Audio('audio/hit_character.wav');
+  hitEnemySound = new Audio('audio/hit_enemy.ogg');
 
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
@@ -24,10 +33,10 @@ class World {
     this.maxBottles = this.collectables.filter(
       (c) => c instanceof CollectableObjectBottle
     ).length;
-
-    this.draw();
+    
     this.setWorld();
     this.run();
+    this.draw();
   }
 
   setWorld() {
@@ -85,6 +94,7 @@ class World {
       this.bottleBar.setPercentage(
         (this.bottlesCollected / this.maxBottles) * 100
       );
+          this.playSound(this.throwSound);
     }
   }
   checkCollectableCollisions() {
@@ -96,6 +106,8 @@ class World {
           this.coinBar.setPercentage(
             (this.coinsCollected / this.maxCoins) * 100
           );
+          this.playSound(this.collectCoinSound);
+
         }
         //Bottles
         if (item instanceof CollectableObjectBottle) {
@@ -103,6 +115,7 @@ class World {
           this.bottleBar.setPercentage(
             (this.bottlesCollected / this.maxBottles) * 100
           );
+          this.playSound(this.collectBottleSound);
         }
         this.collectables.splice(index, 1);
       }
@@ -169,4 +182,11 @@ class World {
     mo.x = mo.x * -1;
     this.ctx.restore();
   }
+
+  playSound(sound){
+    sound.pause();
+    sound.currentTime = 0;
+    sound.play();
+  }
 }
+
