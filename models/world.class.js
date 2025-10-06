@@ -21,6 +21,7 @@ class World {
   hitCharacterSound = new Audio('audio/hit_character.wav');
   hitEnemySound = new Audio('audio/hit_enemy.ogg');
 
+
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
     this.canvas = canvas;

@@ -59,6 +59,7 @@ class MovableObject extends DrawableObject {
     );
   }
   hit() {
+    this.world.playSound(this.world.hitCharacterSound);
     this.energy -= 5;
     if (this.energy < 0) {
       this.energy = 0;
