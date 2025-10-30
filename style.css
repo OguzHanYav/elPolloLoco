@@ -11,3 +11,21 @@ canvas {
   background-color: black;
 
 }
+.game-button{
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px 16px;
+  transition: 0.2s;
+  width: 50px;
+  height: 50px;
+}
+.game-button:hover{
+  transform: scale(1.05);
+  opacity: 0.8;
+}
+.game-button-container{
+  display: flex;
+  justify-content:flex-end;
+  width: 720px;
+}

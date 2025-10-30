@@ -59,3 +59,11 @@ window.addEventListener("keyup", (e) => {
     keyboard.D = false;
   }
 });
+
+window.addEventListener("load",()=> {
+  const fullscreenBtn = document.getElementById("game-btn");
+  const canvas = document.getElementById("canvas");
+  fullscreenBtn.addEventListener("click", ()=> {
+    canvas.requestFullscreen();
+  })
+})
