@@ -2,12 +2,33 @@ let canvas;
 let world;
 let keyboard = new Keyboard();
 
-function init() {
+  function init() {
   canvas = document.getElementById("canvas");
   world = new World(canvas, keyboard);
-
   console.log("My Character is", world.character);
 }
+
+window.addEventListener("load", () => {
+  const startButton = document.getElementById("start-button");
+  const startScreen = document.getElementById("start-screen");
+  const fullscreenBtn = document.getElementById("fullscreen-btn");
+  const canvas = document.getElementById("canvas");
+
+
+  startButton.addEventListener("click", () => {
+    startScreen.style.display = "none";
+    startGame();
+    fullscreenBtn.style.display="flex";
+  });
+
+  if (fullscreenBtn) {
+     fullscreenBtn.addEventListener("click", () => {
+    canvas.requestFullscreen();
+  });
+  }
+ 
+});
+
 
 window.addEventListener("keydown", (e) => {
   console.log(e.keyCode);
@@ -30,7 +51,7 @@ window.addEventListener("keydown", (e) => {
   if (e.keyCode == 32) {
     keyboard.SPACE = true;
   }
-   if (e.keyCode == 68) {
+  if (e.keyCode == 68) {
     keyboard.D = true;
   }
 });
@@ -55,15 +76,10 @@ window.addEventListener("keyup", (e) => {
   if (e.keyCode == 32) {
     keyboard.SPACE = false;
   }
-   if (e.keyCode == 68) {
+  if (e.keyCode == 68) {
     keyboard.D = false;
   }
 });
-
-window.addEventListener("load",()=> {
-  const fullscreenBtn = document.getElementById("game-btn");
-  const canvas = document.getElementById("canvas");
-  fullscreenBtn.addEventListener("click", ()=> {
-    canvas.requestFullscreen();
-  })
-})
+function startGame() {
+  init();
+}
