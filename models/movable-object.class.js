@@ -13,15 +13,36 @@ class MovableObject extends DrawableObject {
     right: 0,
   };
 
+  gravityInterval = null;
+
   applyGravity() {
-    //Falling/Jumping function
-    setInterval(() => {
-      if (this.isAboveGround() || this.speedY > 0) {
-        this.y -= this.speedY;
-        this.speedY -= this.acceleration;
-      }
-    }, 1000 / 25);
+    if (!this.gravityInterval) {
+      this.gravityInterval = setInterval(() => {
+        if (this.isAboveGround() || this.speedY > 0) {
+          this.y -= this.speedY;
+          this.speedY -= this.acceleration;
+        }
+      }, 1000 / 25);
+    }
   }
+
+  stopGravity(){
+    if (this.gravityInterval) {
+      clearInterval(this.gravityInterval);
+      this.gravityInterval = null;
+    }
+    this.speedY = 0;
+  }
+
+  // applyGravity() {
+  //   //Falling/Jumping function
+  //   setInterval(() => {
+  //     if (this.isAboveGround() || this.speedY > 0) {
+  //       this.y -= this.speedY;
+  //       this.speedY -= this.acceleration;
+  //     }
+  //   }, 1000 / 25);
+  // }
 
   isAboveGround() {
     if (this instanceof ThrowableObject) {
