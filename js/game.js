@@ -2,10 +2,9 @@ let canvas;
 let world;
 let keyboard = new Keyboard();
 
-  function init() {
+function init() {
   canvas = document.getElementById("canvas");
   world = new World(canvas, keyboard);
-  console.log("My Character is", world.character);
 }
 
 window.addEventListener("load", () => {
@@ -14,21 +13,18 @@ window.addEventListener("load", () => {
   const fullscreenBtn = document.getElementById("fullscreen-btn");
   const canvas = document.getElementById("canvas");
 
-
   startButton.addEventListener("click", () => {
     startScreen.style.display = "none";
     startGame();
-    fullscreenBtn.style.display="flex";
+    fullscreenBtn.style.display = "flex";
   });
 
   if (fullscreenBtn) {
-     fullscreenBtn.addEventListener("click", () => {
-    canvas.requestFullscreen();
-  });
+    fullscreenBtn.addEventListener("click", () => {
+      canvas.requestFullscreen();
+    });
   }
- 
 });
-
 
 window.addEventListener("keydown", (e) => {
   console.log(e.keyCode);
