@@ -52,6 +52,11 @@ class World {
       this.checkThrowObjects();
       this.checkCollectableCollisions();
       this.checkThrowCollision();
+      this.level.enemies.forEach(enemy => {
+        if (enemy.isEndboss) {
+          enemy.updateAnimation();
+        }
+      })
     }, 200);
   }
 
