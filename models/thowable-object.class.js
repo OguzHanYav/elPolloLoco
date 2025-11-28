@@ -1,5 +1,6 @@
 class ThrowableObject extends MovableObject {
   speedX = 10;
+  splashActive =false;
   rotationImages = [
     "img/6_salsa_bottle/bottle_rotation/1_bottle_rotation.png",
     "img/6_salsa_bottle/bottle_rotation/2_bottle_rotation.png",
@@ -58,13 +59,16 @@ class ThrowableObject extends MovableObject {
       this.playSplashAnimation();
     }
   }
-  playSplashAnimation(){
+  playSplashAnimation(collisionX,collisionY){
     this.isBroken = true;
+    this.splashActive = true;
+
     clearInterval(this.rotationInvterval);
     clearInterval(this.moveInterval);
     clearInterval(this.splashCheckInterval);
     this.stopGravity();
-    this.y = 400;
+    if (collisionY) this.y = collisionY;
+    if (collisionX) this.x = collisionX;
 
     let i = 0;
     const splashInterval = setInterval(() => {
@@ -73,8 +77,11 @@ class ThrowableObject extends MovableObject {
         i++;
       }else {
         clearInterval(splashInterval);
-        this.loadImage(this.splashImages[5]);
+        setTimeout(() => {
+          this.splashActive =false;
+          
+        }, 1000);
       }
-    }, 200);
+    }, 100); 
   }
 }

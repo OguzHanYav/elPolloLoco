@@ -1,5 +1,0 @@
-Todos
-
-Collisions - Character-Chicken/SmallChicken/EndBoss
-Buttons - Restart, Mute, Home, Controls, Exit Fullscreen
-StatusBar - EndBoss

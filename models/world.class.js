@@ -9,6 +9,7 @@ class World {
   statusBar = new StatusBar();
   coinBar = new CoinsBar();
   bottleBar = new BottleBar();
+  endbossBar = new EndBossBar();
   //Counters
   throwableObjects = [];
   coinsCollected = 0;
@@ -38,6 +39,7 @@ class World {
     this.setWorld();
     this.run();
     this.draw();
+    console.log("Enemies:",this.level.enemies);
   }
 
   setWorld() {
@@ -49,23 +51,24 @@ class World {
       this.checkCollisions();
       this.checkThrowObjects();
       this.checkCollectableCollisions();
+      this.checkThrowCollision();
     }, 200);
   }
 
   creatCollectables() {
     return [
-      new CollectableObjectBottle(300, 260),
+      new CollectableObjectBottle(300, 360),
       new CollectableObjectBottle(600, 360),
-      new CollectableObjectBottle(900, 160),
-      new CollectableObjectBottle(1000, 100),
-      new CollectableObjectBottle(1050, 160),
+      new CollectableObjectBottle(900, 360),
+      new CollectableObjectBottle(1000, 360),
+      new CollectableObjectBottle(1050, 360),
       new CollectableObjectBottle(1100, 360),
       new CollectableObjectBottle(1200, 360),
-      new CollectableObjectBottle(1300, 160),
-      new CollectableObjectBottle(1400, 100),
-      new CollectableObjectBottle(1600, 120),
-      new CollectableObjectBottle(1680, 220),
-      new CollectableObjectBottle(1800, 320),
+      new CollectableObjectBottle(1300, 360),
+      new CollectableObjectBottle(1400, 360),
+      new CollectableObjectBottle(1600, 360),
+      new CollectableObjectBottle(1680, 360),
+      new CollectableObjectBottle(1800, 360),
       new CollectableObjectCoin(400, 360),
       new CollectableObjectCoin(500, 260),
       new CollectableObjectCoin(600, 160),
@@ -80,6 +83,7 @@ class World {
   }
 
   checkThrowObjects() {
+
     if (this.keyboard.D && this.bottlesCollected > 0) {
       // Startpoint to throw
       let offsetX = this.character.otherDircetion ? -30 : 80;
@@ -132,6 +136,26 @@ class World {
       }
     });
   }
+  checkThrowCollision(){
+    this.throwableObjects.forEach((bottle) => {
+
+      if (!bottle || bottle.isBroken) return;
+
+      this.level.enemies.forEach ((enemy)=> {
+
+        if (bottle.isColliding(enemy)) {
+        const collisionY = bottle.y;
+        const collisionX = bottle.x;
+        bottle.playSplashAnimation(collisionX,collisionY);
+        if (enemy.isEndboss) {
+          enemy.hit();
+          this.endbossBar.setPercentage(enemy.energy);
+        }
+      }
+      });
+
+    });
+  }
 
   draw() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -142,6 +166,7 @@ class World {
     this.addToMap(this.statusBar);
     this.addToMap(this.coinBar);
     this.addToMap(this.bottleBar);
+    this.addToMap(this.endbossBar);
     this.ctx.translate(this.camera_x, 0);
 
     this.addToMap(this.character);
