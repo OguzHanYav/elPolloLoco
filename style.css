@@ -2,7 +2,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-image: url('img/5_background/desert-9720959_640.png');
+  background-image: url("img/5_background/desert-9720959_640.png");
   background-size: cover;
   background-position: top;
   background-repeat: no-repeat;
@@ -10,22 +10,23 @@ body {
 canvas {
   width: 100%;
   height: 100%;
-display: block;
-z-index: 1;
+  display: block;
+  z-index: 1;
 }
-.game-container{
+.game-container {
   position: relative;
   width: 90vw;
   max-width: 720px;
   aspect-ratio: 3/2;
   height: auto;
+  margin-top: 40px;
 }
-.game-button-container{
+.game-button-container {
   display: flex;
-  justify-content:flex-end;
+  justify-content: flex-end;
   width: 720px;
 }
-#start-screen{
+#start-screen {
   position: absolute;
   inset: 0;
   width: 720px;
@@ -35,7 +36,7 @@ z-index: 1;
   flex-direction: column;
   z-index: 20;
 }
-#start-img{
+#start-img {
   width: 720px;
   height: 480px;
   object-fit: cover;
@@ -43,8 +44,9 @@ z-index: 1;
   top: 0;
   left: 0;
   z-index: 0;
+  border-radius: 20px;
 }
-#start-button{
+#start-button {
   position: relative;
   z-index: 10;
   padding: 12px 24px;
@@ -75,4 +77,64 @@ z-index: 1;
   width: 28px;
   height: 28px;
   filter: invert(1);
+}
+
+#game-over-screen {
+  position: absolute;
+  inset: 0;
+  width: 720px;
+  height: 480px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  z-index: 20;
+}
+
+#game-over-img,
+#win-img {
+  width: 720px;
+  height: 480px;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  opacity: 0.8;
+}
+
+#win-screen {
+  position: absolute;
+  inset: 0;
+  width: 720px;
+  height: 480px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  z-index: 20;
+}
+
+#restart-button,
+#restart-button-win {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  z-index: 10;
+  padding: 14px 32px;
+  font-size: 22px;
+  font-weight: bold;
+  border-radius: 12px;
+  background: #ff6600;
+  color: white;
+  border: 2px solid #ffffff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+#restart-button-win:hover {
+  background: #ff6600;
+  transform: translateX(-50%) scale(1.05);
 }

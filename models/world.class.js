@@ -5,6 +5,7 @@ class World {
   canvas;
   keyboard;
   camera_x = 0;
+  lastThrow = 0;
   //Statusbars
   statusBar = new StatusBar();
   coinBar = new CoinsBar();
@@ -44,6 +45,9 @@ class World {
 
   setWorld() {
     this.character.world = this;
+    this.level.enemies.forEach((enemy) => {
+      enemy.world = this;
+    });
   }
 
   run() {
@@ -52,12 +56,14 @@ class World {
       this.checkThrowObjects();
       this.checkCollectableCollisions();
       this.checkThrowCollision();
+      this.checkGameEnd();
+      this.character.updateAnimation();
       this.level.enemies.forEach(enemy => {
         if (enemy.isEndboss) {
           enemy.updateAnimation();
         }
       })
-    }, 200);
+    }, 1000 / 60);
   }
 
   creatCollectables() {
@@ -86,10 +92,10 @@ class World {
       new CollectableObjectCoin(1600, 360),
     ];
   }
-
-  checkThrowObjects() {
-
-    if (this.keyboard.D && this.bottlesCollected > 0) {
+    checkThrowObjects() {
+      const now = new Date().getTime();
+    if (this.keyboard.D && this.bottlesCollected > 0 && now - this.lastThrow > 400) {
+      this.lastThrow = now;
       // Startpoint to throw
       let offsetX = this.character.otherDircetion ? -30 : 80;
       let offsetY = 30;
@@ -154,12 +160,60 @@ class World {
         bottle.playSplashAnimation(collisionX,collisionY);
         if (enemy.isEndboss) {
           enemy.hit();
+          enemy.triggerAttack();
           this.endbossBar.setPercentage(enemy.energy);
         }
       }
       });
 
     });
+  }
+
+  checkGameEnd() {
+    const endBoss = this.level.enemies.find(enemy => enemy.isEndboss);
+    
+    // Character is dead - Game Over
+    if (this.character.isDead()) {
+      if (this.character.deadAnimationFinished) {
+      this.showGameOverScreen();
+      }
+      return;
+    }
+    
+    // EndBoss is dead - You Win
+    if (endBoss && endBoss.isDead()) {
+      if (endBoss.deadAnimationFinished) {
+      this.showWinScreen();
+      }
+      }
+    }
+
+  showGameOverScreen() {
+    const gameOverScreen = document.getElementById('game-over-screen');
+    const canvas = document.getElementById('canvas');
+    const fullscreenBtn = document.getElementById('fullscreen-btn');
+    
+    if (gameOverScreen && gameOverScreen.style.display === 'none') {
+      canvas.style.display = 'flex';
+      fullscreenBtn.style.display = 'none';
+      gameOverScreen.style.display = 'flex';
+      
+      document.getElementById('restart-button').onclick = () => location.reload();
+    }
+  }
+
+  showWinScreen() {
+    const winScreen = document.getElementById('win-screen');
+    const canvas = document.getElementById('canvas');
+    const fullscreenBtn = document.getElementById('fullscreen-btn');
+    
+    if (winScreen && winScreen.style.display === 'none') {
+      canvas.style.display = 'flex';
+      fullscreenBtn.style.display = 'none';
+      winScreen.style.display = 'flex';
+      
+      document.getElementById('restart-button-win').onclick = () => location.reload();
+    }
   }
 
   draw() {

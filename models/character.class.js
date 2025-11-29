@@ -4,6 +4,9 @@ class Character extends MovableObject {
   width = 120;
   world;
   speed = 10;
+  lastHit = 0;
+  deadAnimationFinished = false;
+  isDeadCharacter = false;
 
   offset = {
     top: 100,
@@ -70,27 +73,41 @@ class Character extends MovableObject {
         this.moveLeft();
         this.otherDircetion = true; // Minus 0.15 px von der x Koordinate
       }
-      this.world.camera_x = -this.x + 100;
-    }, 1000 / 60);
-
-    // Walking/Jumping animation
-    setInterval(() => {
-      if (this.isDead()) {
-        this.playAnimation(this.IMAGES_DEAD);
-      } else if (this.isHurt()) {
-        this.playAnimation(this.IMAGES_HURT);
-      } else if (this.isAboveGround()) {
-        this.playAnimation(this.IMAGES_JUMPING);
-      } else {
-        if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
-          this.playAnimation(this.IMAGES_WALKING);
-        }
-      }
       if (this.world.keyboard.SPACE && !this.isAboveGround()) {
-        this.world.playSound(this.world.jumpSound);
+        if (this.world && this.world.playSound && this.world.jumpSound) {
+          this.world.playSound(this.world.jumpSound);
+        }
         this.jump();
       }
-
-    }, 50);
+      this.world.camera_x = -this.x + 100;
+    }, 1000 / 60);
   }
-}
+  
+updateAnimation() {
+      if (this.isDead()) {
+        if (!this.isDeadCharacter) {
+        this.isDeadCharacter = true;
+        this.currentImage = 0;
+        }
+
+        if (!this.deadAnimationFinished) {
+          this.playAnimation(this.IMAGES_DEAD);
+
+          if (this.currentImage >= this.IMAGES_DEAD.length) {
+            this.deadAnimationFinished = true;
+          }
+        } else {
+          this.loadImage(this.IMAGES_DEAD[this.IMAGES_DEAD.length - 1]);
+        }
+        return;
+      }
+      if (this.isHurt()) {
+        return this.playAnimation(this.IMAGES_HURT);
+      }
+      if (this.isAboveGround()) {
+        return this.playAnimation(this.IMAGES_JUMPING);
+  }
+  if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
+    return this.playAnimation(this.IMAGES_WALKING);
+  }
+}}

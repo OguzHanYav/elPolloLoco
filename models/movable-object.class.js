@@ -51,9 +51,13 @@ class MovableObject extends DrawableObject {
   }
 
   playAnimation(images) {
+    if (!images || images.length === 0) return;
     let i = this.currentImage % images.length;
     let path = images[i];
+    if (this.imageCache[path]){
     this.img = this.imageCache[path];
+
+    }
     this.currentImage++;
   }
 
@@ -70,20 +74,21 @@ class MovableObject extends DrawableObject {
     );
   }
   hit() {
+    const now = new Date().getTime();
+    if (now - this.lastHit > 800) {
     this.world.playSound(this.world.hitCharacterSound);
     this.energy -= 5;
-    if (this.energy < 0) {
-      this.energy = 0;
-    } else {
-      this.lastHit = new Date().getTime();
-    }
+    if (this.energy < 0) this.energy = 0;
+    this.lastHit = now;
   }
+}
   isDead() {
-    return this.energy == 0;
+    return this.energy <= 0;
   }
   isHurt() {
-    let timepassed = new Date().getTime() - this.lastHit;
-    timepassed = timepassed / 1000;
-    return timepassed < 0.1;
+    // let timepassed = new Date().getTime() - this.lastHit;
+    // timepassed = timepassed / 1000;
+    // return timepassed < 0.1;
+    return (new Date().getTime() - this.lastHit) < 500;
   }
 }

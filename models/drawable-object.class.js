@@ -9,7 +9,9 @@ class DrawableObject {
   offset = { left: 0, right: 0, top: 0, bottom: 0 };
 
   draw(ctx) {
-    ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+    if (this.img){
+      ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+    }
   }
 
   drawFrame(ctx) {
