@@ -78,7 +78,10 @@ class EndBoss extends MovableObject {
       this.updateState();
       if (this.isDeadBoss) this.handleDeathAnimation();
       else if (this.isHurt)this.playAnimation(this.IMAGES_HURT);
-      else if (this.isAttacking) this.playAnimation(this.IMAGES_ATTACK);
+      else if (this.isAttacking){
+        this.playAnimation(this.IMAGES_ATTACK);
+        this.handleAttackMovement();
+      } 
       else if (this.isWalking) {
         this.playAnimation(this.IMAGES_WALKING);
         this.handleWalking();
@@ -105,8 +108,15 @@ class EndBoss extends MovableObject {
   triggerAttack(){
     this.attackTriggered = true;
   }
-  handleMovement() {
-    this.x -= 5;
+  handleAttackMovement(){
+    const char = this.world.character;
+    if (char.x < this.x){
+      this.x -= 15;
+      this.otherDirection = true;
+    }else if (char.x > this.x){
+      this.x += 15;
+      this.otherDirection = false;
+    }
   }
   handleDeathAnimation() {
     if (!this.deadAnimationFinished) {
