@@ -97,7 +97,7 @@ class World {
     if (this.keyboard.D && this.bottlesCollected > 0 && now - this.lastThrow > 400) {
       this.lastThrow = now;
       // Startpoint to throw
-      let offsetX = this.character.otherDircetion ? -30 : 80;
+      let offsetX = this.character.otherDirection ? -30 : 80;
       let offsetY = 30;
       let bottleX = this.character.x + offsetX;
       let bottleY = this.character.y + offsetY;
@@ -105,7 +105,7 @@ class World {
       let bottle = new ThrowableObject(
         bottleX,
         bottleY,
-        this.character.otherDircetion
+        this.character.otherDirection
       );
       this.throwableObjects.push(bottle);
       this.bottlesCollected--;
@@ -140,12 +140,21 @@ class World {
     });
   }
   checkCollisions() {
-    this.level.enemies.forEach((enemy) => {
+    this.level.enemies.forEach((enemy, index) => {
       if (this.character.isColliding(enemy)) {
-        this.character.hit();
+        if (this.character.speedY < 0 && this.character.y + this.character.height - 50 < enemy.y) {
+          enemy.hit ? enemy.hit() : enemy.energy = 0;
+          if (enemy instanceof SmallChicken || enemy instanceof Chicken) {
+          setTimeout(() => {
+            this.level.enemies.splice(index, 1);
+          },100);
+        }
+      }else {
+       this.character.hit();
         this.statusBar.setPercentage(this.character.energy);
-      }
-    });
+        }
+  }
+      });
   }
   checkThrowCollision(){
     this.throwableObjects.forEach((bottle) => {
@@ -249,27 +258,26 @@ class World {
   }
 
   addToMap(mo) {
-    if (mo.otherDircetion) {
+    if (mo.otherDirection) {
       this.flipImage(mo);
     }
     mo.draw(this.ctx);
     mo.drawFrame(this.ctx);
-    if (mo.otherDircetion) {
+    if (mo.otherDirection) {
       this.flipImageBack(mo);
     }
   }
-  flipImage(mo) {
-    this.ctx.save();
-    this.ctx.translate(mo.width, 0); // Spiegelverkehrt
-    this.ctx.scale(-1, 1); // Verschiebung des Elements
-    mo.x = mo.x * -1; // Auf der X Achse
-  }
 
-  flipImageBack(mo) {
-    mo.x = mo.x * -1;
-    this.ctx.restore();
-  }
+flipImage(mo) {
+  this.ctx.save();
+  this.ctx.translate(mo.x + mo.width , mo.y);
+  this.ctx.scale(-1, 1);
+  this.ctx.translate(-mo.x, -mo.y);
+}
 
+flipImageBack(mo) {
+  this.ctx.restore();
+}
   playSound(sound){
     sound.pause();
     sound.currentTime = 0;

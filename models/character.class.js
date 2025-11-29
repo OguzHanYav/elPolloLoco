@@ -66,12 +66,12 @@ class Character extends MovableObject {
     setInterval(() => {
       if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
         this.moveRight();
-        this.otherDircetion = false;
+        this.otherDirection = false;
       }
 
       if (this.world.keyboard.LEFT && this.x > 0) {
         this.moveLeft();
-        this.otherDircetion = true; // Minus 0.15 px von der x Koordinate
+        this.otherDirection = true; // Minus 0.15 px von der x Koordinate
       }
       if (this.world.keyboard.SPACE && !this.isAboveGround()) {
         if (this.world && this.world.playSound && this.world.jumpSound) {

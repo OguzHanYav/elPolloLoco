@@ -96,13 +96,14 @@ class EndBoss extends MovableObject {
     this.isWalking = !this.attackTriggered && Math.abs(charDistance) < this.walkDistance;
     this.isAttacking = this.attackTriggered;
     if (this.isAttacking) this.isWalking = false;
+    this.otherDirection = this.world.character.x > this.x;
   }
 
   handleWalking(){
     if (!this.isWalking) return;
     const char = this.world.character;
     this.x += char.x > this.x ? 5 : -5;
-    this.otherDirection = char.x < this.x;
+    this.otherDirection = char.x > this.x;
   }
 
   triggerAttack(){
@@ -110,12 +111,14 @@ class EndBoss extends MovableObject {
   }
   handleAttackMovement(){
     const char = this.world.character;
+    const moveStep = this.isAttacking ? 40 : 5;
+
     if (char.x < this.x){
-      this.x -= 15;
-      this.otherDirection = true;
-    }else if (char.x > this.x){
-      this.x += 15;
+      this.x -= moveStep;
       this.otherDirection = false;
+    }else if (char.x > this.x){
+      this.x += moveStep;
+      this.otherDirection = true;
     }
   }
   handleDeathAnimation() {
