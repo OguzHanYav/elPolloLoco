@@ -14,10 +14,10 @@ class MovableObject extends DrawableObject {
   };
 
   gravityInterval = null;
-constructor() {
-  super();
-  this.id = MovableObject.nextId++;
-}
+  constructor() {
+    super();
+    this.id = MovableObject.nextId++;
+  }
   applyGravity() {
     if (!this.gravityInterval) {
       this.gravityInterval = setInterval(() => {
@@ -29,14 +29,13 @@ constructor() {
     }
   }
 
-  stopGravity(){
+  stopGravity() {
     if (this.gravityInterval) {
       clearInterval(this.gravityInterval);
       this.gravityInterval = null;
     }
     this.speedY = 0;
   }
-
   isAboveGround() {
     if (this instanceof ThrowableObject) {
       return true;
@@ -57,9 +56,8 @@ constructor() {
     if (!images || images.length === 0) return;
     let i = this.currentImage % images.length;
     let path = images[i];
-    if (this.imageCache[path]){
-    this.img = this.imageCache[path];
-
+    if (this.imageCache[path]) {
+      this.img = this.imageCache[path];
     }
     this.currentImage++;
   }
@@ -79,19 +77,16 @@ constructor() {
   hit() {
     const now = new Date().getTime();
     if (now - this.lastHit > 800) {
-    this.world.playSound(this.world.hitCharacterSound);
-    this.energy -= 5;
-    if (this.energy < 0) this.energy = 0;
-    this.lastHit = now;
+      this.world.playSound(this.world.hitCharacterSound);
+      this.energy -= 5;
+      if (this.energy < 0) this.energy = 0;
+      this.lastHit = now;
+    }
   }
-}
   isDead() {
     return this.energy <= 0;
   }
   isHurt() {
-    // let timepassed = new Date().getTime() - this.lastHit;
-    // timepassed = timepassed / 1000;
-    // return timepassed < 0.1;
-    return (new Date().getTime() - this.lastHit) < 500;
+    return new Date().getTime() - this.lastHit < 500;
   }
 }

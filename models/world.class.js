@@ -41,9 +41,6 @@ class World {
     this.setWorld();
     this.run();
     this.draw();
-    console.log("Enemies IDs");
-    this.level.enemies.forEach((c) => console.log(c.id, c.x));
-    console.log("Enemies:", this.level.enemies);
   }
 
   setWorld() {
@@ -301,6 +298,7 @@ class World {
       enemy.die();
     }
   }
+
   removeEnemyWhenDead(enemy) {
     const index = this.level.enemies.findIndex((e) => e.id === enemy.id);
     if (index !== -1) this.level.enemies.splice(index, 1);
