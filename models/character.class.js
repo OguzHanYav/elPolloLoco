@@ -1,4 +1,5 @@
 class Character extends MovableObject {
+  
   y = 80;
   height = 250;
   width = 120;
@@ -51,8 +52,9 @@ class Character extends MovableObject {
     `img/2_character_pepe/4_hurt/H-43.png`,
   ];
 
-  constructor() {
+  constructor(world) {
     super().loadImage(`img/2_character_pepe/2_walk/W-21.png`);
+    this.world = world;
     this.loadImages(this.IMAGES_WALKING);
     this.loadImages(this.IMAGES_JUMPING);
     this.loadImages(this.IMAGES_DEAD);

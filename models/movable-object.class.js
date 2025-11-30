@@ -5,7 +5,7 @@ class MovableObject extends DrawableObject {
   acceleration = 2.5;
   energy = 100;
   lastHit = 0;
-
+  static nextId = 1;
   offset = {
     top: 0,
     bottom: 0,
@@ -14,7 +14,10 @@ class MovableObject extends DrawableObject {
   };
 
   gravityInterval = null;
-
+constructor() {
+  super();
+  this.id = MovableObject.nextId++;
+}
   applyGravity() {
     if (!this.gravityInterval) {
       this.gravityInterval = setInterval(() => {

@@ -1,6 +1,8 @@
 let canvas;
 let world;
 let keyboard = new Keyboard();
+let startScreenSound = new Audio("audio/intro.mp3");
+startScreenSound.loop = true;
 
 function init() {
   canvas = document.getElementById("canvas");
@@ -13,8 +15,12 @@ window.addEventListener("load", () => {
   const fullscreenBtn = document.getElementById("fullscreen-btn");
   const canvas = document.getElementById("canvas");
 
+  startScreenSound.play();
+
   startButton.addEventListener("click", () => {
     startScreen.style.display = "none";
+    startScreenSound.pause();
+    startScreenSound.currentTime = 0;
     startGame();
     fullscreenBtn.style.display = "flex";
   });
