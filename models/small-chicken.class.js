@@ -27,6 +27,7 @@ class SmallChicken extends MovableObject {
     this.x = 500 + Math.random() * 1300;
     this.y = 460 - this.height;
     this.speed = 0.15 + Math.random() * 0.5;
+    this.setOnGround();
   }
 updateAnimation(now) {
   if (this.isDeadChicken) {

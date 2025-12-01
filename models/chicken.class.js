@@ -25,6 +25,7 @@ class Chicken extends MovableObject {
     this.x = 700 + Math.random() * 1200;
     this.y = 460 - this.height;
     this.speed = 0.15 + Math.random() * 0.5;
+    this.setOnGround();
   }
   updateAnimation(now) {
     if (this.isDeadChicken) {

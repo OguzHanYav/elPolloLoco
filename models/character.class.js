@@ -1,5 +1,4 @@
 class Character extends MovableObject {
-  y = 80;
   height = 250;
   width = 120;
   world;
@@ -60,6 +59,7 @@ class Character extends MovableObject {
     this.loadImages(this.IMAGES_HURT);
     this.applyGravity();
     this.animate();
+    this.setOnGround();
   }
 
   animate() {

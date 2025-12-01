@@ -14,20 +14,31 @@ class MovableObject extends DrawableObject {
   };
 
   gravityInterval = null;
-  constructor() {
+  constructor(groundY = 460) {
     super();
     this.id = MovableObject.nextId++;
+    this.groundY = groundY;
+    this.prevY = this.y;
   }
-  applyGravity() {
-    if (!this.gravityInterval) {
-      this.gravityInterval = setInterval(() => {
-        if (this.isAboveGround() || this.speedY > 0) {
-          this.y -= this.speedY;
-          this.speedY -= this.acceleration;
-        }
-      }, 1000 / 25);
-    }
+
+
+applyGravity(){
+  if(!this.gravityInterval){
+    this.gravityInterval = setInterval(() => {
+      this.y -= this.speedY;
+      this.speedY -= this.acceleration;
+      if(this.y + this.height >= this.groundY){
+        this.y = this.groundY - this.height;
+        this.speedY = 0;
+      }
+    }, 1000 / 25);
   }
+}
+
+isAboveGround(){
+  return this.y + this.height < this.groundY;
+}
+
 
   stopGravity() {
     if (this.gravityInterval) {
@@ -35,13 +46,6 @@ class MovableObject extends DrawableObject {
       this.gravityInterval = null;
     }
     this.speedY = 0;
-  }
-  isAboveGround() {
-    if (this instanceof ThrowableObject) {
-      return true;
-    } else {
-      return this.y < 180;
-    }
   }
 
   moveRight() {
@@ -88,5 +92,12 @@ class MovableObject extends DrawableObject {
   }
   isHurt() {
     return new Date().getTime() - this.lastHit < 500;
+  }
+
+  setOnGround() {
+    this.y = this.groundY - this.height;
+  }
+  updatePrevY(){
+    this.prevY = this.y;
   }
 }

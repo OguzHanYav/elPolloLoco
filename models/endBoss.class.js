@@ -1,7 +1,6 @@
 class EndBoss extends MovableObject {
   height = 450;
   width = 250;
-  y = 50;
   energy = 100;
   isEndboss = true;
   deadAnimationFinished = false;
@@ -68,6 +67,7 @@ class EndBoss extends MovableObject {
     this.moveInterval = 200;
     this.lastAnimationTime = 0;
     this.animationInterval = 150;
+    this.setOnGround();
   }
   updateAnimation() {
     const now = new Date().getTime();

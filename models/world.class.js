@@ -58,6 +58,7 @@ class World {
       this.checkThrowCollision();
       this.checkGameEnd();
       this.character.updateAnimation();
+      this.character.updatePrevY();
       const now = new Date().getTime();
       this.level.enemies.forEach((enemy) => {
         if (enemy.updateAnimation) enemy.updateAnimation(now);
@@ -142,23 +143,22 @@ class World {
     });
   }
 
-    checkCollisions() {
+  checkCollisions() {
     this.enemiesToKill = [];
-
     this.level.enemies.forEach((enemy) => {
       if (this.character.isColliding(enemy)) {
+        const prevCharBottom = this.character.prevY + this.character.height;
         const charBottom = this.character.y + this.character.height;
-        const enemyTop = enemy.y;
-        const isFromAbove =
-          this.character.speedY < 0 &&
-          charBottom -10 > enemyTop;
+        const isFromAbove = charBottom !== prevCharBottom;
 
-        if (isFromAbove && (enemy instanceof SmallChicken || enemy instanceof Chicken)) {
-
-            enemy.hit();
-            this.enemiesToKill.push(enemy.id);
-
-        } else if (!isFromAbove){
+        if (
+          isFromAbove &&
+          (enemy instanceof SmallChicken || enemy instanceof Chicken)
+        ) {
+          enemy.hit();
+          enemy.HasBeenHit = true;
+          this.enemiesToKill.push(enemy.id);
+        } else if (!isFromAbove && !enemy.HasBeenHit) {
 
           this.character.hit();
           this.statusBar.setPercentage(this.character.energy);
