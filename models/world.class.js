@@ -149,7 +149,8 @@ class World {
       if (this.character.isColliding(enemy)) {
         const prevCharBottom = this.character.prevY + this.character.height;
         const charBottom = this.character.y + this.character.height;
-        const isFromAbove = charBottom !== prevCharBottom;
+        const minFallDistance = 20; 
+        const isFromAbove = charBottom - prevCharBottom >= minFallDistance;
 
         if (
           isFromAbove &&
@@ -159,7 +160,6 @@ class World {
           enemy.HasBeenHit = true;
           this.enemiesToKill.push(enemy.id);
         } else if (!isFromAbove && !enemy.HasBeenHit) {
-
           this.character.hit();
           this.statusBar.setPercentage(this.character.energy);
         }
