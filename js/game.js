@@ -13,22 +13,52 @@ window.addEventListener("load", () => {
   const fullscreenBtn = document.getElementById("fullscreen-btn");
   const gameContainer = document.querySelector(".game-container");
   const muteBtn = document.getElementById("mute-btn");
+  const infoBtn = document.getElementById("info-btn");
+  const infoPopup = document.getElementById("info-popup");
 
+  //Start Button
   startButton.addEventListener("click", () => {
     startScreen.style.display = "none";
     init();
     world.playBackgroundMusic();
   });
-
+  //Fullscreen Button
   fullscreenBtn.addEventListener("click", () => {
-    gameContainer.requestFullscreen();
+    if (!document.fullscreenElement) {
+      gameContainer.requestFullscreen();
+      fullscreenBtn.querySelector("img").src = "img/fullscreen-exit-multi-size.ico";
+    } else {
+      document.exitFullscreen();
+      fullscreenBtn.querySelector("img").src= "img/fullScreen.png";
+    }
   });
+  document.addEventListener("fullscreenchange", ()=>{
+    if (!document.fullscreenElement) {
+      fullscreenBtn.querySelector("img").src ="img/fullScreen.png";
+    }
+  });
+  //Mute Button
   muteBtn.addEventListener("click", () => {
-    if (world){
+    if (world) {
       world.toggleMute();
     }
   });
+  //Popup Info Button
+infoBtn.addEventListener ("click",(event) => {
+  infoPopup.classList.remove("hidden");
+  event.stopPropagation();
 });
+
+document.addEventListener("click", (event)=>{
+  if (!infoPopup.classList.contains("hidden")) {
+    infoPopup.classList.add("hidden");
+  }
+});
+infoPopup.querySelector(".popup-content").addEventListener("click",(event) =>{
+  event.stopPropagation();
+});
+});
+
 
 window.addEventListener("keydown", (e) => {
   console.log(e.keyCode);
