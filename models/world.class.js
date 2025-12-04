@@ -6,16 +6,19 @@ class World {
   keyboard;
   camera_x = 0;
   lastThrow = 0;
+
   //Statusbars
   statusBar = new StatusBar();
   coinBar = new CoinsBar();
   bottleBar = new BottleBar();
   endbossBar = new EndBossBar();
+
   //Counters
   throwableObjects = [];
   coinsCollected = 0;
   bottlesCollected = 0;
   enemiesToKill = [];
+
   //Sounds
   jumpSound = new Audio("audio/jumping_01.wav");
   throwSound = new Audio("audio/throwBottle.wav");
@@ -23,11 +26,19 @@ class World {
   collectCoinSound = new Audio("audio/collectCoin.wav");
   hitCharacterSound = new Audio("audio/hit_character.wav");
   hitEnemySound = new Audio("audio/hit_enemy.ogg");
+  startScreenSound = new Audio("audio/intro.mp3");
+
+  isMuted = false;
+  allSounds = [];
+  gameStopped = false;
 
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
     this.canvas = canvas;
     this.keyboard = keyboard;
+
+    this.startScreenSound.loop = true;
+
     this.character = new Character(this);
     this.collectables = this.creatCollectables();
 
@@ -41,8 +52,20 @@ class World {
     this.setWorld();
     this.run();
     this.draw();
+
+    //All Sounds in an array for mute function
+    this.allSounds = [
+      this.jumpSound,
+      this.throwSound,
+      this.collectBottleSound,
+      this.collectCoinSound,
+      this.hitCharacterSound,
+      this.hitEnemySound,
+      this.startScreenSound,
+    ];
   }
 
+  //INITIAL SETUP
   setWorld() {
     this.character.world = this;
     this.level.enemies.forEach((enemy) => {
@@ -52,6 +75,7 @@ class World {
 
   run() {
     setInterval(() => {
+
       this.checkCollisions();
       this.checkThrowObjects();
       this.checkCollectableCollisions();
@@ -59,6 +83,7 @@ class World {
       this.checkGameEnd();
       this.character.updateAnimation();
       this.character.updatePrevY();
+
       const now = new Date().getTime();
       this.level.enemies.forEach((enemy) => {
         if (enemy.updateAnimation) enemy.updateAnimation(now);
@@ -93,6 +118,7 @@ class World {
     ];
   }
   checkThrowObjects() {
+    if (this.gameStopped) return;
     const now = new Date().getTime();
     if (
       this.keyboard.D &&
@@ -149,7 +175,7 @@ class World {
       if (this.character.isColliding(enemy)) {
         const prevCharBottom = this.character.prevY + this.character.height;
         const charBottom = this.character.y + this.character.height;
-        const minFallDistance = 20; 
+        const minFallDistance = 20;
         const isFromAbove = charBottom - prevCharBottom >= minFallDistance;
 
         if (
@@ -193,6 +219,7 @@ class World {
     if (this.character.isDead()) {
       if (this.character.deadAnimationFinished) {
         this.showGameOverScreen();
+        this.stopGame();
       }
       return;
     }
@@ -201,6 +228,7 @@ class World {
     if (endBoss && endBoss.isDead()) {
       if (endBoss.deadAnimationFinished) {
         this.showWinScreen();
+        this.stopGame();
       }
     }
   }
@@ -212,7 +240,6 @@ class World {
 
     if (gameOverScreen && gameOverScreen.style.display === "none") {
       canvas.style.display = "flex";
-      fullscreenBtn.style.display = "none";
       gameOverScreen.style.display = "flex";
 
       document.getElementById("restart-button").onclick = () =>
@@ -227,7 +254,6 @@ class World {
 
     if (winScreen && winScreen.style.display === "none") {
       canvas.style.display = "flex";
-      fullscreenBtn.style.display = "none";
       winScreen.style.display = "flex";
 
       document.getElementById("restart-button-win").onclick = () =>
@@ -288,6 +314,7 @@ class World {
     this.ctx.restore();
   }
   playSound(sound) {
+    if (this.isMuted) return;
     sound.pause();
     sound.currentTime = 0;
     sound.play();
@@ -303,4 +330,42 @@ class World {
     const index = this.level.enemies.findIndex((e) => e.id === enemy.id);
     if (index !== -1) this.level.enemies.splice(index, 1);
   }
+
+  toggleMute() {
+    this.isMuted = !this.isMuted;
+
+    if (this.isMuted) {
+      this.allSounds.forEach((sound) => sound.pause());
+    } else{
+      this.playBackgroundMusic();
+    }
+
+    const btn = document.getElementById("mute-btn");
+    if (btn) {
+      btn.src = this.isMuted
+        ? "img/mute-2-multi-size.ico"
+        : "img/volume-up-4-multi-size.ico";
+    }
+  }
+
+  playBackgroundMusic() {
+    if (this.isMuted) return;
+    this.startScreenSound.currentTime = 0;
+    this.startScreenSound.play().catch(() => {});
+  }
+  stopGame(){
+  this.gameStopped = true;
+
+  this.character.speed = 0;
+  this.character.stopGravity();
+  this.character.velocityY = 0;
+  this.level.enemies.forEach((enemy) => {
+    if (!enemy.isEndboss){
+      enemy.speed = 0;
+      enemy.stopGravity();
+      enemy.velocityY = 0;
+    }
+});
 }
+}
+

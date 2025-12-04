@@ -40,6 +40,7 @@
   <body>
     <div class="game-container">
       <canvas id="canvas" width="720" height="480"> </canvas>
+      <!--Start Screen-->
       <div id="start-screen">
         <img
           id="start-img"
@@ -48,6 +49,7 @@
         />
         <button id="start-button">Start Game</button>
       </div>
+      <!--Game Over-->
       <div id="game-over-screen" style="display: none;">
         <img
           id="game-over-img"
@@ -56,6 +58,7 @@
         />
         <button id="restart-button">Restart Game</button>
       </div>
+      <!--You Win-->
       <div id="win-screen" style="display: none;">
         <img
           id="win-img"
@@ -64,12 +67,14 @@
         />
         <button id="restart-button-win">Restart Game</button>
       </div>
+      <!--Fullscreen & Mute Buttons-->
       <button id="fullscreen-btn">
         <img
           src="img/fullScreen.png"
           alt=""
         />
       </button>
+      <img  id="mute-btn" src="img/volume-up-4-multi-size.ico" class="mute-button">
     </div>
   </body>
 </html>

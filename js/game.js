@@ -1,8 +1,6 @@
 let canvas;
 let world;
 let keyboard = new Keyboard();
-let startScreenSound = new Audio("audio/intro.mp3");
-startScreenSound.loop = true;
 
 function init() {
   canvas = document.getElementById("canvas");
@@ -13,23 +11,23 @@ window.addEventListener("load", () => {
   const startButton = document.getElementById("start-button");
   const startScreen = document.getElementById("start-screen");
   const fullscreenBtn = document.getElementById("fullscreen-btn");
-  const canvas = document.getElementById("canvas");
-
-  startScreenSound.play();
+  const gameContainer = document.querySelector(".game-container");
+  const muteBtn = document.getElementById("mute-btn");
 
   startButton.addEventListener("click", () => {
     startScreen.style.display = "none";
-    startScreenSound.pause();
-    startScreenSound.currentTime = 0;
-    startGame();
-    fullscreenBtn.style.display = "flex";
+    init();
+    world.playBackgroundMusic();
   });
 
-  if (fullscreenBtn) {
-    fullscreenBtn.addEventListener("click", () => {
-      canvas.requestFullscreen();
-    });
-  }
+  fullscreenBtn.addEventListener("click", () => {
+    gameContainer.requestFullscreen();
+  });
+  muteBtn.addEventListener("click", () => {
+    if (world){
+      world.toggleMute();
+    }
+  });
 });
 
 window.addEventListener("keydown", (e) => {
@@ -82,6 +80,3 @@ window.addEventListener("keyup", (e) => {
     keyboard.D = false;
   }
 });
-function startGame() {
-  init();
-}

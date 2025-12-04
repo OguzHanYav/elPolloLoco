@@ -61,13 +61,13 @@ class EndBoss extends MovableObject {
     this.loadImages(this.IMAGES_WALKING);
     this.loadImages(this.IMAGES_ATTACK);
     this.x = 2500;
+    this.y = 30;
     this.isHurt = false;
     this.isDeadBoss = false;
     this.lastMove = 0;
     this.moveInterval = 200;
     this.lastAnimationTime = 0;
     this.animationInterval = 150;
-    this.setOnGround();
   }
   updateAnimation() {
     const now = new Date().getTime();

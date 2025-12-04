@@ -7,6 +7,8 @@ body {
   background-position: top;
   background-repeat: no-repeat;
 }
+
+/* CANVAS --------------------------------------*/
 canvas {
   width: 100%;
   height: 100%;
@@ -14,6 +16,8 @@ canvas {
   border-radius: 20px;
   z-index: 1;
 }
+
+/* GAME CONTAINER -------------------------------*/
 .game-container {
   position: relative;
   width: 90vw;
@@ -22,31 +26,35 @@ canvas {
   height: auto;
   margin-top: 40px;
 }
-.game-button-container {
-  display: flex;
-  justify-content: flex-end;
-  width: 720px;
-}
-#start-screen {
+
+/* START / WIN / GAME OVER SCREENS --------------*/
+#start-screen,
+#win-screen,
+#game-over-screen {
   position: absolute;
   inset: 0;
-  width: 720px;
+  width: 100%;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
   z-index: 20;
 }
-#start-img {
-  width: 720px;
-  height: 480px;
+
+#start-img,
+#game-over-img,
+#win-img {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 0;
-  border-radius: 20px;
+  z-index: 1;
 }
+
+/* BUTTONS: START, RESTART -----------------------*/
 #start-button {
   position: relative;
   z-index: 10;
@@ -58,63 +66,6 @@ canvas {
   border: none;
   cursor: pointer;
 }
-#fullscreen-btn {
-  position: absolute;
-  bottom: 12px;
-  right: 12px;
-  z-index: 15;
-  background: rgba(0, 0, 0, 0.4);
-  border-radius: 8px;
-  display: none;
-  justify-content: center;
-  align-items: center;
-  border: none;
-  cursor: pointer;
-  transition: 0.2s;
-  width: 50px;
-  height: 50px;
-}
-#fullscreen-btn img {
-  width: 28px;
-  height: 28px;
-  filter: invert(1);
-}
-
-#game-over-screen {
-  position: absolute;
-  inset: 0;
-  width: 720px;
-  height: 480px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  z-index: 20;
-}
-
-#game-over-img,
-#win-img {
-  width: 720px;
-  height: 480px;
-  object-fit: cover;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 1;
-  opacity: 0.8;
-}
-
-#win-screen {
-  position: absolute;
-  inset: 0;
-  width: 720px;
-  height: 480px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  z-index: 20;
-}
 
 #restart-button,
 #restart-button-win {
@@ -122,7 +73,6 @@ canvas {
   bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
-
   z-index: 10;
   padding: 14px 32px;
   font-size: 22px;
@@ -136,6 +86,58 @@ canvas {
 }
 
 #restart-button-win:hover {
-  background: #ff6600;
   transform: translateX(-50%) scale(1.05);
+}
+
+/* FULLSCREEN BUTTON -----------------------------*/
+#fullscreen-btn {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  z-index: 30;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 8px;
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  cursor: pointer;
+  transition: 0.2s;
+  width: 50px;
+  height: 50px;
+}
+
+#fullscreen-btn img {
+  width: 28px;
+  height: 28px;
+  filter: invert(1);
+}
+
+/* MUTE BUTTON -----------------------------------*/
+.mute-button {
+  position: absolute;
+  bottom: 12px;
+  right: 70px;
+  z-index: 30;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  cursor: pointer;
+  transition: 0.2s;
+  width: 50px;
+  height: 50px;
+}
+
+/* FULLSCREEN MODE --------------------------------*/
+.game-container:fullscreen {
+  width: 100vw;
+  height: 100vh;
+}
+
+.game-container:fullscreen canvas {
+  width: 100%;
+  height: 100%;
 }
