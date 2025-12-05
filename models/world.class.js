@@ -247,13 +247,12 @@ class World {
   showGameOverScreen() {
     const gameOverScreen = document.getElementById("game-over-screen");
     const canvas = document.getElementById("canvas");
-    const fullscreenBtn = document.getElementById("fullscreen-btn");
 
     if (gameOverScreen && gameOverScreen.style.display === "none") {
       canvas.style.display = "flex";
       gameOverScreen.style.display = "flex";
 
-      document.getElementById("restart-button").onclick = () =>
+      document.getElementById("restart-img").onclick = () =>
         location.reload();
     }
   }
@@ -267,7 +266,7 @@ class World {
       canvas.style.display = "flex";
       winScreen.style.display = "flex";
 
-      document.getElementById("restart-button-win").onclick = () =>
+      document.getElementById("restart-img-win").onclick = () =>
         location.reload();
     }
   }
@@ -387,8 +386,8 @@ class World {
     const btn = document.getElementById("mute-btn");
     if (btn) {
       btn.src = this.isMuted
-        ? "img/mute-2-multi-size.ico"
-        : "img/volume-up-4-multi-size.ico";
+        ? "img/mute-btn-white.ico"
+        : "img/volume-white.ico";
     }
   }
 

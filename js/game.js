@@ -8,7 +8,7 @@ function init() {
 }
 
 window.addEventListener("load", () => {
-  const startButton = document.getElementById("start-button");
+  const playBtn = document.getElementById("play-btn");
   const startScreen = document.getElementById("start-screen");
   const fullscreenBtn = document.getElementById("fullscreen-btn");
   const gameContainer = document.querySelector(".game-container");
@@ -17,24 +17,28 @@ window.addEventListener("load", () => {
   const infoPopup = document.getElementById("info-popup");
 
   //Start Button
-  startButton.addEventListener("click", () => {
+  playBtn.addEventListener("click", () => {
     startScreen.style.display = "none";
     init();
     world.playBackgroundMusic();
+    
+    playBtn.style.pointerEvents = "none";
+    playBtn.style.opacity = "0.6";
   });
   //Fullscreen Button
   fullscreenBtn.addEventListener("click", () => {
     if (!document.fullscreenElement) {
       gameContainer.requestFullscreen();
-      fullscreenBtn.querySelector("img").src = "img/fullscreen-exit-multi-size.ico";
+      fullscreenBtn.querySelector("img").src =
+        "img/fullscreen-exit-multi-size.ico";
     } else {
       document.exitFullscreen();
-      fullscreenBtn.querySelector("img").src= "img/fullScreen.png";
+      fullscreenBtn.querySelector("img").src = "img/fullScreen.png";
     }
   });
-  document.addEventListener("fullscreenchange", ()=>{
+  document.addEventListener("fullscreenchange", () => {
     if (!document.fullscreenElement) {
-      fullscreenBtn.querySelector("img").src ="img/fullScreen.png";
+      fullscreenBtn.querySelector("img").src = "img/fullScreen.png";
     }
   });
   //Mute Button
@@ -44,21 +48,22 @@ window.addEventListener("load", () => {
     }
   });
   //Popup Info Button
-infoBtn.addEventListener ("click",(event) => {
-  infoPopup.classList.remove("hidden");
-  event.stopPropagation();
-});
+  infoBtn.addEventListener("click", (event) => {
+    infoPopup.classList.remove("hidden");
+    event.stopPropagation();
+  });
 
-document.addEventListener("click", (event)=>{
-  if (!infoPopup.classList.contains("hidden")) {
-    infoPopup.classList.add("hidden");
-  }
+  document.addEventListener("click", (event) => {
+    if (!infoPopup.classList.contains("hidden")) {
+      infoPopup.classList.add("hidden");
+    }
+  });
+  infoPopup
+    .querySelector(".popup-content")
+    .addEventListener("click", (event) => {
+      event.stopPropagation();
+    });
 });
-infoPopup.querySelector(".popup-content").addEventListener("click",(event) =>{
-  event.stopPropagation();
-});
-});
-
 
 window.addEventListener("keydown", (e) => {
   console.log(e.keyCode);

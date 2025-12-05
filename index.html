@@ -46,7 +46,6 @@
           src="img/9_intro_outro_screens/start/startscreen_1.png"
           alt=""
         />
-        <button id="start-button">Start Game</button>
       </div>
       <!--Game Over-->
       <div id="game-over-screen" style="display: none">
@@ -55,7 +54,10 @@
           src="img/9_intro_outro_screens/game_over/oh no you lost!.png"
           alt="Game Over"
         />
-        <button id="restart-button">Restart Game</button>
+        <div class="restart-wrapper">
+        <img id="restart-img" src="img/restart.ico" alt="" class="restart-img">
+          <span class="restart-text">Play againg</span>
+        </div>
       </div>
       <!--You Win-->
       <div id="win-screen" style="display: none">
@@ -64,34 +66,34 @@
           src="img/You won, you lost/You won A.png"
           alt="You Won"
         />
-        <button id="restart-button-win">Restart Game</button>
+       <div class="restart-wrapper">
+        <img id="restart-img-win" src="img/restart.ico" alt="" class="restart-img">
+          <span class="restart-text">Play again</span>
+        </div>
       </div>
-      <!--Fullscreen & Mute Buttons-->
-      <button id="fullscreen-btn">
-        <img src="img/fullScreen.png" alt="" />
-      </button>
-      <img
-        id="mute-btn"
-        src="img/volume-up-4-multi-size.ico"
-        class="mute-button"
-      />
-      <!--Info Button-->
-      <img
-        id="info-btn"
-        src="img/instruction.ico"
-        alt="info"
-        class="info-icon"
-      />
-       <div id="info-popup" class="popup hidden">
-      <div class="popup-content">
-        <h2>Bedienungsanleitung</h2>
-        <ul>
-          <li><b>D</b> - Flasche werfen</li>
-          <li><b>Space</b> - Springen</li>
-          <li><b>Pfeiltasten</b> Links/Rechts - Bewegung</li>
-        </ul>
+      <!--Button Box Right-->
+      <div class="button-box">
+        <!--Fullscreen & Mute Buttons-->
+        <button id="fullscreen-btn">
+          <img src="img/fullScreen.png" alt="" />
+        </button>
       </div>
-    </div>
+      <!--Button Box Left-->
+      <div class="button-box-left">
+        <img id="play-btn" src="img/play-btn.ico" alt="Play" />
+        <img id="mute-btn" src="img/volume-white-2.ico" class="mute-button" />
+        <img id="info-btn"src="img/info-btn-white.ico" alt="info" class="info-icon"/>
+      </div>
+      <div id="info-popup" class="popup hidden">
+        <div class="popup-content">
+          <h2>Bedienungsanleitung</h2>
+          <ul>
+            <li><b>D</b> - Flasche werfen</li>
+            <li><b>Space</b> - Springen</li>
+            <li><b>Pfeiltasten</b> Links/Rechts - Bewegung</li>
+          </ul>
+        </div>
+      </div>
     </div>
   </body>
 </html>
