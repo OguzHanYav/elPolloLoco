@@ -18,6 +18,10 @@ canvas {
   z-index: 1;
 }
 
+.comic-font {
+  font-family: "Comic Neue", "Comic Sans MS", cursive;
+}
+
 /* GAME CONTAINER ---------------------------------------*/
 .game-container {
   position: relative;
@@ -158,7 +162,7 @@ canvas {
   border-radius: 15px;
   text-align: center;
   color: #e6e6e6;
-  font-family: "Arial", sans-serif;
+  font-family: "Comic Neue", "Comic Sans MS", cursive;
   font-size: 20px;
   box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
   max-width: 380px;
@@ -193,7 +197,7 @@ canvas {
 /* RESTART WRAPPER – unten zentriert */
 .restart-wrapper {
   position: absolute;
-  bottom: 35px;               /* Abstand vom unteren Rand */
+  bottom: 35px; /* Abstand vom unteren Rand */
   left: 50%;
   transform: translateX(-50%);
 
@@ -204,7 +208,6 @@ canvas {
 
   z-index: 50;
 }
-
 
 /* Restart image */
 #restart-img,
@@ -227,11 +230,8 @@ canvas {
 /* Text unter Restart */
 .restart-text {
   color: #e6e6e6;
-  font-size: 22px;
-  font-family: "Arial", sans-serif;
-  text-shadow: 0 0 8px rgba(0,0,0,0.4);
+  font-size: 28px;
+  font-weight: bold;
+  font-family: "Comic Neue", "Comic Sans MS", cursive;
+  text-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
 }
-
-
-
-
