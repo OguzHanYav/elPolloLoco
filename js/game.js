@@ -5,6 +5,7 @@ let keyboard = new Keyboard();
 function init() {
   canvas = document.getElementById("canvas");
   world = new World(canvas, keyboard);
+  window.world = world;
 }
 
 window.addEventListener("load", () => {
@@ -15,13 +16,16 @@ window.addEventListener("load", () => {
   const muteBtn = document.getElementById("mute-btn");
   const infoBtn = document.getElementById("info-btn");
   const infoPopup = document.getElementById("info-popup");
+  const canvas = document.getElementById("canvas");
 
+  initUIButtons();
   //Start Button
   playBtn.addEventListener("click", () => {
     startScreen.style.display = "none";
+    canvas.style.display ="block";
     init();
     world.playBackgroundMusic();
-    
+
     playBtn.style.pointerEvents = "none";
     playBtn.style.opacity = "0.6";
   });
@@ -115,3 +119,40 @@ window.addEventListener("keyup", (e) => {
     keyboard.D = false;
   }
 });
+
+function initUIButtons() {
+  if (window.uiInitialized) return;
+
+  const restartBtn = document.getElementById("restart-btn");
+  const homeBtn = document.getElementById("home-btn");
+
+  //Restart Button
+  if (restartBtn) {
+    restartBtn.onclick = () => {
+      if (window.world) {
+        window.world.startNewGame();
+      }
+    };
+  }
+
+  //Home Button
+  if (homeBtn) {
+    homeBtn.onclick = () => {
+      if (!window.world) return;
+      window.world.stopGame();
+      const canvas = document.getElementById("canvas");
+      canvas.style.display = "none";
+
+      document.getElementById("win-screen").style.display = "none";
+      document.getElementById("game-over-screen").style.display = "none";
+
+      const startScreen = document.getElementById("start-screen");
+      const playBtn = document.getElementById("play-btn");
+
+      startScreen.style.display = "flex";
+      playBtn.style.pointerEvents = "auto";
+      playBtn.style.opacity = "1";
+    };
+  }
+  window.uiInitialized = true;
+}

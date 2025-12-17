@@ -5,10 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <link rel="stylesheet" href="style.css" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@300;400;700&display=swap"
-      rel="stylesheet"
-    />
+    <link rel="icon" type="image/svg+xml" href="img/peppers-favicon.svg" />
     <script src="models/drawable-object.class.js"></script>
     <script src="models/movable-object.class.js"></script>
 
@@ -58,36 +55,15 @@
           src="img/9_intro_outro_screens/game_over/oh no you lost!.png"
           alt="Game Over"
         />
-        <div class="restart-wrapper">
-          <img
-            id="restart-img"
-            src="img/restart.ico"
-            alt=""
-            class="restart-img"
-          />
-          <span class="restart-text">Play againg</span>
         </div>
-      </div>
       <!--You Win-->
       <div id="win-screen" style="display: none">
-        <img
-          id="win-img"
-          src="img/You won, you lost/You won A.png"
-          alt="You Won"
-        />
-        <div class="restart-wrapper">
-          <img
-            id="restart-img-win"
-            src="img/restart.ico"
-            alt=""
-            class="restart-img"
-          />
-          <span class="restart-text">Play again</span>
+        <img id="win-img"src="img/You won, you lost/You won A.png"alt="You Won"/>
         </div>
-      </div>
       <!--Button Box Right-->
       <div class="button-box">
-        <!--Fullscreen & Mute Buttons-->
+            <img id="home-btn" src="img/home.ico" class="restart-img" />
+            <img id="restart-btn" src="img/restart.ico" class="restart-img" />
         <button id="fullscreen-btn">
           <img src="img/fullScreen.png" alt="" />
         </button>

@@ -1,11 +1,13 @@
 class World {
-  level = level1;
+  level;
   character;
   ctx;
   canvas;
   keyboard;
   camera_x = 0;
   lastThrow = 0;
+  intervalId = null;
+  animationFrameId = null;
 
   //Statusbars
   statusBar = new StatusBar();
@@ -38,26 +40,22 @@ class World {
   endbossDeathSoundPlayed = false;
 
   constructor(canvas, keyboard) {
+    this.level = createLevel1();
     this.ctx = canvas.getContext("2d");
     this.canvas = canvas;
     this.keyboard = keyboard;
-
     this.backgroundSound.loop = true;
-
     this.character = new Character(this);
     this.collectables = this.creatCollectables();
-
     this.maxCoins = this.collectables.filter(
       (c) => c instanceof CollectableObjectCoin
     ).length;
     this.maxBottles = this.collectables.filter(
       (c) => c instanceof CollectableObjectBottle
     ).length;
-
     this.setWorld();
     this.run();
     this.draw();
-
     //All Sounds in an array for mute function
     this.allSounds = [
       this.jumpSound,
@@ -72,9 +70,28 @@ class World {
       this.smallChickenDeathSound,
       this.endbossDeathSound,
     ];
+    this.loadMuteState();
+  }
+  clearCanvas() {
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+  }
+  stopGame() {
+    this.gameStopped = true;
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+      this.intervalId = null;
+    }
+    if (this.animationFrameId) {
+      cancelAnimationFrame(this.animationFrameId);
+      this.animationFrameId = null;
+    }
+    this.allSounds.forEach((s) => {
+      s.pause();
+      s.currentTime = 0;
+    });
+    this.clearCanvas();
   }
 
-  //INITIAL SETUP
   setWorld() {
     this.character.world = this;
     this.level.enemies.forEach((enemy) => {
@@ -83,7 +100,9 @@ class World {
   }
 
   run() {
-    setInterval(() => {
+    this.intervalId = setInterval(() => {
+      if (this.gameStopped) return;
+
       this.checkCollisions();
       this.checkThrowObjects();
       this.checkCollectableCollisions();
@@ -229,8 +248,8 @@ class World {
     // Character is dead - Game Over
     if (this.character.isDead()) {
       if (this.character.deadAnimationFinished) {
-        this.showGameOverScreen();
         this.stopGame();
+        this.showGameOverScreen();
       }
       return;
     }
@@ -238,43 +257,28 @@ class World {
     // EndBoss is dead - You Win
     if (endBoss && endBoss.isDead()) {
       if (endBoss.deadAnimationFinished) {
-        this.showWinScreen();
         this.stopGame();
+        this.showWinScreen();
       }
     }
   }
 
   showGameOverScreen() {
-    const gameOverScreen = document.getElementById("game-over-screen");
-    const canvas = document.getElementById("canvas");
-
-    if (gameOverScreen && gameOverScreen.style.display === "none") {
-      canvas.style.display = "flex";
-      gameOverScreen.style.display = "flex";
-
-      document.getElementById("restart-img").onclick = () =>
-        location.reload();
-    }
+    document.getElementById("game-over-screen").style.display = "flex";
   }
 
   showWinScreen() {
-    const winScreen = document.getElementById("win-screen");
-    const canvas = document.getElementById("canvas");
-    const fullscreenBtn = document.getElementById("fullscreen-btn");
-
-    if (winScreen && winScreen.style.display === "none") {
-      canvas.style.display = "flex";
-      winScreen.style.display = "flex";
-
-      document.getElementById("restart-img-win").onclick = () =>
-        location.reload();
-    }
+    document.getElementById("win-screen").style.display = "flex";
   }
 
   draw() {
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    if (this.gameStopped) return;
+
+    this.clearCanvas();
     this.ctx.translate(this.camera_x, 0);
+
     this.addObjectsToMap(this.level.backgroundObjects);
+
     //Space for fixed object
     this.ctx.translate(-this.camera_x, 0);
     this.addToMap(this.statusBar);
@@ -289,11 +293,7 @@ class World {
     this.addObjectsToMap(this.throwableObjects);
     this.addObjectsToMap(this.collectables);
     this.ctx.translate(-this.camera_x, 0);
-
-    let self = this;
-    requestAnimationFrame(function () {
-      self.draw();
-    });
+    this.animationFrameId = requestAnimationFrame(() => this.draw());
   }
 
   addObjectsToMap(objects) {
@@ -378,8 +378,12 @@ class World {
     this.isMuted = !this.isMuted;
 
     if (this.isMuted) {
-      this.allSounds.forEach((sound) => sound.pause());
+      this.allSounds.forEach((sound) => {
+        sound.pause();
+        sound.muted = true;
+      });
     } else {
+      this.allSounds.forEach((sound) => (sound.muted = false));
       this.playBackgroundMusic();
     }
 
@@ -389,20 +393,30 @@ class World {
         ? "img/mute-btn-white.ico"
         : "img/volume-white.ico";
     }
+    localStorage.setItem("isMuted", this.isMuted ? "true" : "false");
+  }
+  loadMuteState() {
+    const savedMute = localStorage.getItem("isMuted");
+    if (savedMute === "true") {
+      this.isMuted = true;
+      this.allSounds.forEach((sound) => (sound.muted = true));
+      const btn = document.getElementById("mute-btn");
+      if (btn) btn.src = "img/mute-btn-white.ico";
+    } else {
+      this.isMuted = false;
+      this.allSounds.forEach((sound) => (sound.muted = false));
+    }
   }
 
-  stopGame() {
-    this.gameStopped = true;
+  startNewGame() {
+    if (window.world) {
+      window.world.stopGame();
+    }
 
-    this.character.speed = 0;
-    this.character.stopGravity();
-    this.character.velocityY = 0;
-    this.level.enemies.forEach((enemy) => {
-      if (!enemy.isEndboss) {
-        enemy.speed = 0;
-        enemy.stopGravity();
-        enemy.velocityY = 0;
-      }
-    });
+    document.getElementById("game-over-screen").style.display = "none";
+    document.getElementById("win-screen").style.display = "none";
+    document.getElementById("canvas").style.display = "block";
+
+    window.world = new World(this.canvas, this.keyboard);
   }
 }

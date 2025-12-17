@@ -13,7 +13,7 @@ class CollectableObjectBottle extends MovableObject {
 }
 
 class CollectableObjectCoin extends MovableObject {
-    collectedCoinSound = new Audio(`audio/collecCoins.wav`);
+    collectedCoinSound = new Audio(`audio/collectCoin.wav`);
   constructor(x, y) {
     super();
     this.loadImage(`img/8_coin/coin_2.png`);

@@ -1,3 +1,18 @@
+/* ===============================
+   LOCAL FONT: Comic Neue
+   =============================== */
+@font-face {
+  font-family: "ComicNeue";
+  src: url("Fonts/Comic_Neue/ComicNeue-Regular.ttf") format("truetype");
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: "ComicNeue";
+  src: url("Fonts/Comic_Neue/ComicNeue-Bold.ttf") format("truetype");
+  font-weight: bold;
+}
+
 /* BODY -------------------------------------------------*/
 body {
   display: flex;
