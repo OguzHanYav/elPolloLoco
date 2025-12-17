@@ -263,10 +263,12 @@ class World {
   }
 
   showGameOverScreen() {
+    document.body.classList.remove("game-running");
     document.getElementById("game-over-screen").style.display = "flex";
   }
 
   showWinScreen() {
+    document.body.classList.remove("game-running");
     document.getElementById("win-screen").style.display = "flex";
   }
 

@@ -39,9 +39,7 @@
 
   <body>
     <div id="rotate-overlay">
-      <div class="rotate-message">
-        Turn you device to play
-      </div>
+      <div class="rotate-message">Turn you device to play</div>
     </div>
     <div class="game-container">
       <canvas id="canvas" width="720" height="480"> </canvas>
@@ -60,15 +58,19 @@
           src="img/9_intro_outro_screens/game_over/oh no you lost!.png"
           alt="Game Over"
         />
-        </div>
+      </div>
       <!--You Win-->
       <div id="win-screen" style="display: none">
-        <img id="win-img"src="img/You won, you lost/You won A.png"alt="You Won"/>
-        </div>
+        <img
+          id="win-img"
+          src="img/You won, you lost/You won A.png"
+          alt="You Won"
+        />
+      </div>
       <!--Button Box Right-->
       <div class="button-box">
-            <img id="home-btn" src="img/home.ico" class="restart-img" />
-            <img id="restart-btn" src="img/restart.ico" class="restart-img" />
+        <img id="home-btn" src="img/home.ico" class="restart-img" />
+        <img id="restart-btn" src="img/restart.ico" class="restart-img" />
         <button id="fullscreen-btn">
           <img src="img/fullScreen.png" alt="" />
         </button>
@@ -84,6 +86,18 @@
           class="info-icon"
         />
       </div>
+      <!--Mobile Control Buttons-->
+      <div class="mobile-controls">
+        <div class="mobile-left">
+          <div id="btn-left" class="touch-btn">◀</div>
+          <div id="btn-right" class="touch-btn">▶</div>
+        </div>
+        <div class="mobile-right">
+          <div id="btn-jump" class="touch-btn">⤒</div>
+          <div id="btn-throw" class="touch-btn">●</div>
+        </div>
+      </div>
+
       <div id="info-popup" class="popup hidden">
         <div class="popup-content">
           <h2>Game Instructions</h2>

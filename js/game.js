@@ -8,7 +8,6 @@ function init() {
   window.world = world;
 }
 
-
 window.addEventListener("load", () => {
   const playBtn = document.getElementById("play-btn");
   const startScreen = document.getElementById("start-screen");
@@ -20,10 +19,12 @@ window.addEventListener("load", () => {
   const canvas = document.getElementById("canvas");
 
   initUIButtons();
+  initMobileControls();
   //Start Button
   playBtn.addEventListener("click", () => {
     startScreen.style.display = "none";
     canvas.style.display = "block";
+    document.body.classList.add("game-running");
     init();
     world.playBackgroundMusic();
 
@@ -141,6 +142,7 @@ function initUIButtons() {
     homeBtn.onclick = () => {
       if (!window.world) return;
       window.world.stopGame();
+      document.body.classList.remove("game-running");
       const canvas = document.getElementById("canvas");
       canvas.style.display = "none";
 
@@ -158,4 +160,38 @@ function initUIButtons() {
   window.uiInitialized = true;
 }
 
-
+function initMobileControls() {
+  const left = document.getElementById("btn-left");
+  const right = document.getElementById("btn-right");
+  const jump = document.getElementById("btn-jump");
+  const throwBtn = document.getElementById("btn-throw");
+  if (!left || !right || !jump || !throwBtn) return;
+  const resetMovement = () =>{
+    keyboard.LEFT=false;
+    keyboard.RIGHT=false;
+    keyboard.SPACE=false;
+    keyboard.D=false;
+  }
+  //LEFT
+  left.addEventListener("touchstart",(e)=> {
+    e.preventDefault();
+    keyboard.LEFT = true;
+  });
+  //RIGHT
+  right.addEventListener("touchstart",(e)=> {
+    e.preventDefault();
+    keyboard.RIGHT = true;
+  });
+  //JUMP(SPACE)
+   jump.addEventListener("touchstart",(e)=> {
+    e.preventDefault();
+    keyboard.SPACE = true;
+  });
+  //THROW(D)
+  throwBtn.addEventListener("touchstart",(e)=> {
+    e.preventDefault();
+    keyboard.D = true;
+  });
+  document.addEventListener("touchend",resetMovement);
+  document.addEventListener("touchchancel",resetMovement);
+}
