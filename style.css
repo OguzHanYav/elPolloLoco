@@ -22,29 +22,79 @@ body {
   background-size: cover;
   background-position: top;
   background-repeat: no-repeat;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
 }
 
-/* CANVAS ----------------------------------------------*/
-canvas {
-  width: 100%;
-  height: 100%;
-  display: block;
-  border-radius: 20px;
-  z-index: 1;
-}
 
 .comic-font {
   font-family: "Comic Neue", "Comic Sans MS", cursive;
 }
 
-/* GAME CONTAINER ---------------------------------------*/
+/* GAME CONTAINER */
 .game-container {
   position: relative;
-  width: 90vw;
+  width: 100%;
   max-width: 720px;
-  aspect-ratio: 3/2;
-  margin-top: 40px;
+  aspect-ratio: 3 / 2;
+  margin: 20px auto;
 }
+
+/* CANVAS */
+canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border-radius: 20px;
+}
+
+/* Tablet & Mobile */
+@media (max-width: 900px) {
+  body {
+    height: 100dvh;
+    width: 100dvw;
+  }
+
+  .game-container {
+    width: 100dvw;
+    height: 100dvh;
+    max-width: none;
+    max-height: none;
+    aspect-ratio: auto;
+    margin: 0;
+  }
+
+  canvas {
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+  }
+#start-img,
+#game-over-img,
+#win-img {
+  border-radius: 0px;
+}
+
+  /* Buttons größer für Touch */
+  .button-box img,
+  .button-box-left img {
+    width: 52px;
+    height: 52px;
+  }
+}
+
+
+
 
 /* START / WIN / GAME OVER SCREENS ----------------------*/
 #start-screen,
@@ -249,4 +299,35 @@ canvas {
   font-weight: bold;
   font-family: "Comic Neue", "Comic Sans MS", cursive;
   text-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+}
+/* ROTATE DEVICE OVERLAY -----------------------------*/
+#rotate-overlay {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  color: #fff;
+  z-index: 9999;
+
+  display: none;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.rotate-message {
+  font-family: "Comic Neue", "Comic Sans MS", cursive;
+  font-size: 28px;
+  padding: 20px;
+}
+
+/* SHOW OVERLAY IN PORTRAIT MODE */
+@media screen and (orientation: portrait) and (max-width: 900px) {
+  #rotate-overlay {
+    display: flex;
+  }
+
+
+  .game-container {
+    display: none;
+  }
 }

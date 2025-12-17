@@ -89,7 +89,6 @@ class World {
       s.pause();
       s.currentTime = 0;
     });
-    this.clearCanvas();
   }
 
   setWorld() {

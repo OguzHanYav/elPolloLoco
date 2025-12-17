@@ -8,6 +8,7 @@ function init() {
   window.world = world;
 }
 
+
 window.addEventListener("load", () => {
   const playBtn = document.getElementById("play-btn");
   const startScreen = document.getElementById("start-screen");
@@ -22,7 +23,7 @@ window.addEventListener("load", () => {
   //Start Button
   playBtn.addEventListener("click", () => {
     startScreen.style.display = "none";
-    canvas.style.display ="block";
+    canvas.style.display = "block";
     init();
     world.playBackgroundMusic();
 
@@ -156,3 +157,5 @@ function initUIButtons() {
   }
   window.uiInitialized = true;
 }
+
+
