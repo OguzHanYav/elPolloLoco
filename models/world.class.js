@@ -417,7 +417,8 @@ class World {
     document.getElementById("game-over-screen").style.display = "none";
     document.getElementById("win-screen").style.display = "none";
     document.getElementById("canvas").style.display = "block";
-
+    document.body.classList.add("game-running");
     window.world = new World(this.canvas, this.keyboard);
+    window.world.playBackgroundMusic();
   }
 }
