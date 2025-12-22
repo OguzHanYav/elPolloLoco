@@ -246,18 +246,22 @@ class World {
 
     // Character is dead - Game Over
     if (this.character.isDead()) {
-      if (this.character.deadAnimationFinished) {
-        this.stopGame();
-        this.showGameOverScreen();
+      if (this.character.deadAnimationFinished && !this.gameStopped) {
+        setTimeout(() => {
+          this.showGameOverScreen();
+          this.stopGame();
+        },1200)
       }
       return;
     }
 
     // EndBoss is dead - You Win
     if (endBoss && endBoss.isDead()) {
-      if (endBoss.deadAnimationFinished) {
-        this.stopGame();
-        this.showWinScreen();
+      if (endBoss.deadAnimationFinished && !this.gameStopped) {
+          setTimeout(() => {
+          this.showWinScreen();
+          this.stopGame();
+        },1500)
       }
     }
   }
@@ -273,6 +277,9 @@ class World {
   }
 
   draw() {
+    this.throwableObjects = this.throwableObjects.filter(
+      (bottle) => !bottle.markedForRemoval
+    );
     if (this.gameStopped) return;
 
     this.clearCanvas();
@@ -327,12 +334,12 @@ class World {
   playSound(sound) {
     if (this.isMuted) return;
     sound.currentTime = 0;
-    sound.play().catch(() => {});
+    sound.play().catch(() => { });
   }
   playBackgroundMusic() {
     if (this.isMuted) return;
     this.backgroundSound.currentTime = 0;
-    this.backgroundSound.play().catch(() => {});
+    this.backgroundSound.play().catch(() => { });
   }
 
   playEnemyDeathSound(enemy) {
@@ -371,6 +378,7 @@ class World {
   }
 
   removeEnemyWhenDead(enemy) {
+    if (enemy.isEndboss)return;
     const index = this.level.enemies.findIndex((e) => e.id === enemy.id);
     if (index !== -1) this.level.enemies.splice(index, 1);
   }

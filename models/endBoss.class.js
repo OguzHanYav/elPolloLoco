@@ -123,13 +123,13 @@ class EndBoss extends MovableObject {
   }
   handleDeathAnimation() {
     if (!this.deadAnimationFinished) {
-      this.playAnimation(this.IMAGES_DEAD);
-      if (this.currentImage >= this.IMAGES_DEAD.length) {
+      this.playAnimation(this.IMAGES_DEAD ,200);
+
+      if (this.currentImage >= this.IMAGES_DEAD.length-1) {
         this.deadAnimationFinished = true;
-        this.currentImage = this.IMAGES_DEAD.length - 1;
       }
     } else {
-      this.loadImage(this.IMAGES_DEAD[this.IMAGES_DEAD.length - 1]);
+      this.loadImage(this.IMAGES_DEAD[this.IMAGES_DEAD.length -1]);
     }
   }
   hit() {

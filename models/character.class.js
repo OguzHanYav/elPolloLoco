@@ -11,6 +11,7 @@ class Character extends MovableObject {
   isLongIdle = false;
 
   lastAnimationTime = 0;
+  deadAnimationTime = 0;
   animationIntervalIdle = 180;
   animationIntervalLongIdle = 260;
 
@@ -47,8 +48,7 @@ class Character extends MovableObject {
     `img/2_character_pepe/5_dead/D-53.png`,
     `img/2_character_pepe/5_dead/D-54.png`,
     `img/2_character_pepe/5_dead/D-55.png`,
-    `img/2_character_pepe/5_dead/D-56.png`,
-    `img/2_character_pepe/5_dead/D-57.png`,
+    `img/2_character_pepe/5_dead/D-56.png`
   ];
 
   IMAGES_HURT = [
@@ -99,16 +99,18 @@ class Character extends MovableObject {
   animate() {
     //Camera moving
     setInterval(() => {
-      if (this.world.gameStopped) return;
+      if (this.world.gameStopped || this.isDead()) return;
+      //Character moving Right
       if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
         this.moveRight();
         this.otherDirection = false;
       }
-
+      //Character moving Left
       if (this.world.keyboard.LEFT && this.x > 0) {
         this.moveLeft();
-        this.otherDirection = true; // Minus 0.15 px von der x Koordinate
+        this.otherDirection = true;
       }
+      // Character is Jumping
       if (this.world.keyboard.SPACE && !this.isAboveGround()) {
         if (this.world && this.world.playSound && this.world.jumpSound) {
           this.world.playSound(this.world.jumpSound);
@@ -118,29 +120,30 @@ class Character extends MovableObject {
       this.world.camera_x = -this.x + 100;
     }, 1000 / 60);
   }
-
+  // Animations
   updateAnimation() {
     if (this.world.gameStopped) return;
     const now = Date.now();
     const isMoving = this.world.keyboard.RIGHT || this.world.keyboard.LEFT;
+    const isThrowing = this.world.keyboard.D;
 
     if (this.isDead()) {
+      //Reset Values
       if (!this.isDeadCharacter) {
         this.isDeadCharacter = true;
         this.currentImage = 0;
+        this.deadAnimationTime = 0;
+        this.deadAnimationFinished = false;
+        this.img = this.imageCache[this.IMAGES_DEAD[0]];
       }
-
+      //Play Dead Animation
       if (!this.deadAnimationFinished) {
-        this.playAnimation(this.IMAGES_DEAD);
-
-        if (this.currentImage >= this.IMAGES_DEAD.length) {
-          this.deadAnimationFinished = true;
-        }
-      } else {
-        this.loadImage(this.IMAGES_DEAD[this.IMAGES_DEAD.length - 1]);
+        this.playDeadAnimation();
       }
       return;
     }
+
+    // Jumping,Walking,Hurt,Idle Animation
     if (this.isHurt()) {
       return this.playAnimation(this.IMAGES_HURT);
     }
@@ -151,6 +154,11 @@ class Character extends MovableObject {
       this.resetIdleState();
       return this.playAnimation(this.IMAGES_WALKING);
     }
+    if (isThrowing) {
+      this.resetIdleState();
+      return this.playAnimation(this.IMAGES_IDLE);
+    }
+    //Idle Time
     if (!this.idleStarttime) {
       this.idleStarttime = now;
       this.isLongIdle = false;
@@ -170,16 +178,20 @@ class Character extends MovableObject {
 
     }
   }
-  playAnimationTimed(images,interval) {
-    const now = Date.now();
-    if (now - this.lastAnimationTime < interval) return;
-
-    this.lastAnimationTime = now;
-    this.currentImage = (this.currentImage + 1) % images.length;
-    this.loadImage(images[this.currentImage]);
-  }
   resetIdleState() {
     this.idleStarttime = null;
     this.isLongIdle = false;
   }
+playDeadAnimation() {
+  const now = Date.now();
+  if (now - this.deadAnimationTime < 200) return;
+  this.deadAnimationTime = now;
+  if (this.currentImage < this.IMAGES_DEAD.length - 1) {
+    this.currentImage++;
+  }
+  this.img = this.imageCache[this.IMAGES_DEAD[this.currentImage]];
+  this.deadAnimationFinished = this.currentImage === this.IMAGES_DEAD.length - 1;
+}
+
+
 }

@@ -22,22 +22,39 @@ class MovableObject extends DrawableObject {
   }
 
 
-applyGravity(){
-  if(!this.gravityInterval){
-    this.gravityInterval = setInterval(() => {
-      this.y -= this.speedY;
-      this.speedY -= this.acceleration;
-      if(this.y + this.height >= this.groundY){
-        this.y = this.groundY - this.height;
-        this.speedY = 0;
-      }
-    }, 1000 / 25);
-  }
+  // applyGravity() {
+  //   if (!this.gravityInterval) {
+  //     this.gravityInterval = setInterval(() => {
+  //       if (this.isDeadCharacter) return;
+  //       this.y -= this.speedY;
+  //       this.speedY -= this.acceleration;
+  //       if (this.y + this.height >= this.groundY) {
+  //         this.y = this.groundY - this.height;
+  //         this.speedY = 0;
+  //       }
+  //     }, 1000 / 25);
+  //   }
+  // }
+  applyGravity() {
+  if (this.gravityInterval) return;
+
+  this.gravityInterval = setInterval(() => {
+    if (this.isDeadCharacter) return;
+
+    this.y -= this.speedY;
+    this.speedY -= this.acceleration;
+
+    if (this.y + this.height >= this.groundY) {
+      this.y = this.groundY - this.height;
+      this.speedY = 0;
+    }
+  }, 1000 / 25);
 }
 
-isAboveGround(){
-  return this.y + this.height < this.groundY;
-}
+
+  isAboveGround() {
+    return this.y + this.height < this.groundY;
+  }
 
 
   stopGravity() {
@@ -97,7 +114,21 @@ isAboveGround(){
   setOnGround() {
     this.y = this.groundY - this.height;
   }
-  updatePrevY(){
+  updatePrevY() {
     this.prevY = this.y;
+  }
+  playAnimationTimed(images, interval) {
+    const now = Date.now();
+    if (!this.lastAnimationTime) {
+      this.lastAnimationTime = now;
+      return;
+    }
+    if (now - this.lastAnimationTime >= interval) {
+      this.lastAnimationTime = now;
+      if (this.currentImage < images.length - 1) {
+        this.currentImage++;
+        this.img = this.imageCache[images[this.currentImage]];
+      }
+    }
   }
 }

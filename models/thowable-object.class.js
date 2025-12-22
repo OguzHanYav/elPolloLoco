@@ -62,6 +62,7 @@ class ThrowableObject extends MovableObject {
   playSplashAnimation(collisionX,collisionY){
     this.isBroken = true;
     this.splashActive = true;
+    this.markedForRemoval = false;
 
     clearInterval(this.rotationInvterval);
     clearInterval(this.moveInterval);
@@ -79,7 +80,8 @@ class ThrowableObject extends MovableObject {
         clearInterval(splashInterval);
         setTimeout(() => {
           this.splashActive =false;
-          
+          this.isBroken = true;
+          this.markedForRemoval=true;
         }, 1000);
       }
     }, 100); 
