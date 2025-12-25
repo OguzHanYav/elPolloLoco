@@ -123,7 +123,7 @@ class EndBoss extends MovableObject {
   }
   handleDeathAnimation() {
     if (!this.deadAnimationFinished) {
-      this.playAnimation(this.IMAGES_DEAD ,200);
+      this.playAnimation(this.IMAGES_DEAD ,300);
 
       if (this.currentImage >= this.IMAGES_DEAD.length-1) {
         this.deadAnimationFinished = true;

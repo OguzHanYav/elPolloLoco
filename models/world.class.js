@@ -20,20 +20,20 @@ class World {
   coinsCollected = 0;
   bottlesCollected = 0;
   enemiesToKill = [];
-  allSounds = [];
 
   //Sounds
-  jumpSound = new Audio("audio/jumping_01.wav");
-  throwSound = new Audio("audio/throwBottle.wav");
-  collectBottleSound = new Audio("audio/collectBottle.wav");
-  collectCoinSound = new Audio("audio/collectCoin.wav");
-  hitCharacterSound = new Audio("audio/hit_character.wav");
-  chickenDeathSound = new Audio("audio/hit_enemy.ogg");
-  smallChickenDeathSound = new Audio("audio/smallChickenDeathSound.wav");
-  backgroundSound = new Audio("audio/intro.mp3");
-  splashSound = new Audio("audio/splashBottle.wav");
-  endbossAttackSound = new Audio("audio/endbossAttackingSound.wav");
-  endbossDeathSound = new Audio("audio/endbossDeathSound2.wav");
+  jumpSound = window.AUDIO.jump;
+  throwSound = window.AUDIO.throw;
+  collectBottleSound = window.AUDIO.collectBottle;
+  collectCoinSound = window.AUDIO.collectCoin;
+  hitCharacterSound = window.AUDIO.hitCharacter;
+  chickenDeathSound = window.AUDIO.chickenDeath;
+  smallChickenDeathSound = window.AUDIO.smallChickenDeath;
+  backgroundSound = window.AUDIO.background;
+  splashSound = window.AUDIO.splash;
+  endbossAttackSound = window.AUDIO.endbossAttack;
+  endbossDeathSound = window.AUDIO.endbossDeath;
+
 
   isMuted = false;
   gameStopped = false;
@@ -56,20 +56,6 @@ class World {
     this.setWorld();
     this.run();
     this.draw();
-    //All Sounds in an array for mute function
-    this.allSounds = [
-      this.jumpSound,
-      this.throwSound,
-      this.collectBottleSound,
-      this.collectCoinSound,
-      this.hitCharacterSound,
-      this.backgroundSound,
-      this.splashSound,
-      this.endbossAttackSound,
-      this.chickenDeathSound,
-      this.smallChickenDeathSound,
-      this.endbossDeathSound,
-    ];
     this.loadMuteState();
   }
   clearCanvas() {
@@ -85,10 +71,7 @@ class World {
       cancelAnimationFrame(this.animationFrameId);
       this.animationFrameId = null;
     }
-    this.allSounds.forEach((s) => {
-      s.pause();
-      s.currentTime = 0;
-    });
+    // stopAllSounds();
   }
 
   setWorld() {
@@ -250,7 +233,7 @@ class World {
         setTimeout(() => {
           this.showGameOverScreen();
           this.stopGame();
-        },1200)
+        }, 1200)
       }
       return;
     }
@@ -258,10 +241,10 @@ class World {
     // EndBoss is dead - You Win
     if (endBoss && endBoss.isDead()) {
       if (endBoss.deadAnimationFinished && !this.gameStopped) {
-          setTimeout(() => {
+        setTimeout(() => {
           this.showWinScreen();
           this.stopGame();
-        },1500)
+        }, 1500)
       }
     }
   }
@@ -332,15 +315,18 @@ class World {
     this.ctx.restore();
   }
   playSound(sound) {
-    if (this.isMuted) return;
+    if (this.isMuted || !sound) return;
     sound.currentTime = 0;
     sound.play().catch(() => { });
   }
-  playBackgroundMusic() {
-    if (this.isMuted) return;
+
+  playBackground() {
+    if (this.isMuted || !this.backgroundSound.paused) return;
     this.backgroundSound.currentTime = 0;
+    this.backgroundSound.loop = true;
     this.backgroundSound.play().catch(() => { });
   }
+
 
   playEnemyDeathSound(enemy) {
     if (enemy.isEndboss) {
@@ -378,23 +364,48 @@ class World {
   }
 
   removeEnemyWhenDead(enemy) {
-    if (enemy.isEndboss)return;
+    if (enemy.isEndboss) return;
     const index = this.level.enemies.findIndex((e) => e.id === enemy.id);
     if (index !== -1) this.level.enemies.splice(index, 1);
   }
 
+  // loadMuteState() {
+  //   const savedMute = localStorage.getItem("isMuted") === "true";
+  //   this.isMuted = savedMute;
+  //   window.ALL_SOUNDS.forEach(sound => {
+  //     sound.muted = savedMute;
+  //     if (!savedMute) {
+  //       sound.currentTime = 0;
+  //     }
+  //   });
+  //   const btn = document.getElementById("mute-btn");
+  //   if (btn) {
+  //     btn.src = savedMute ? "img/mute-btn-white.ico" : "img/volume-white.ico";
+  //   }
+  // }
+
+  loadMuteState() {
+    this.isMuted = localStorage.getItem("isMuted") === "true";
+    const btn = document.getElementById("mute-btn");
+    if (btn) {
+      btn.src = this.isMuted ? "img/mute-btn-white.ico" : "img/volume-white.ico";
+    }
+    if (!this.isMuted) {
+      this.playBackground();
+    }
+  }
+
+
   toggleMute() {
     this.isMuted = !this.isMuted;
+    localStorage.setItem("isMuted", this.isMuted);
 
     if (this.isMuted) {
-      this.allSounds.forEach((sound) => {
-        sound.pause();
-        sound.muted = true;
-      });
+      this.backgroundSound.pause();
+      this.backgroundSound.currentTime = 0;
     } else {
-      this.allSounds.forEach((sound) => (sound.muted = false));
-      this.playBackgroundMusic();
-    }
+      this.playBackground();
+    };
 
     const btn = document.getElementById("mute-btn");
     if (btn) {
@@ -402,31 +413,21 @@ class World {
         ? "img/mute-btn-white.ico"
         : "img/volume-white.ico";
     }
-    localStorage.setItem("isMuted", this.isMuted ? "true" : "false");
-  }
-  loadMuteState() {
-    const savedMute = localStorage.getItem("isMuted");
-    if (savedMute === "true") {
-      this.isMuted = true;
-      this.allSounds.forEach((sound) => (sound.muted = true));
-      const btn = document.getElementById("mute-btn");
-      if (btn) btn.src = "img/mute-btn-white.ico";
-    } else {
-      this.isMuted = false;
-      this.allSounds.forEach((sound) => (sound.muted = false));
-    }
   }
 
   startNewGame() {
     if (window.world) {
       window.world.stopGame();
     }
+    window.resetAllSounds();
 
     document.getElementById("game-over-screen").style.display = "none";
     document.getElementById("win-screen").style.display = "none";
     document.getElementById("canvas").style.display = "block";
     document.body.classList.add("game-running");
-    window.world = new World(this.canvas, this.keyboard);
-    window.world.playBackgroundMusic();
+
+    const newWorld = new World(this.canvas, this.keyboard);
+    window.world = newWorld;
+    world = newWorld;
   }
 }

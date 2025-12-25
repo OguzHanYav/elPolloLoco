@@ -26,7 +26,6 @@ window.addEventListener("load", () => {
     canvas.style.display = "block";
     document.body.classList.add("game-running");
     init();
-    world.playBackgroundMusic();
 
     playBtn.style.pointerEvents = "none";
     playBtn.style.opacity = "0.6";
@@ -49,8 +48,8 @@ window.addEventListener("load", () => {
   });
   //Mute Button
   muteBtn.addEventListener("click", () => {
-    if (world) {
-      world.toggleMute();
+    if (window.world) {
+      window.world.toggleMute();
     }
   });
   //Popup Info Button
@@ -142,6 +141,7 @@ function initUIButtons() {
     homeBtn.onclick = () => {
       if (!window.world) return;
       window.world.stopGame();
+
       document.body.classList.remove("game-running");
       const canvas = document.getElementById("canvas");
       canvas.style.display = "none";
@@ -166,32 +166,33 @@ function initMobileControls() {
   const jump = document.getElementById("btn-jump");
   const throwBtn = document.getElementById("btn-throw");
   if (!left || !right || !jump || !throwBtn) return;
-  const resetMovement = () =>{
-    keyboard.LEFT=false;
-    keyboard.RIGHT=false;
-    keyboard.SPACE=false;
-    keyboard.D=false;
+  const resetMovement = () => {
+    keyboard.LEFT = false;
+    keyboard.RIGHT = false;
+    keyboard.SPACE = false;
+    keyboard.D = false;
   }
   //LEFT
-  left.addEventListener("touchstart",(e)=> {
+  left.addEventListener("touchstart", (e) => {
     e.preventDefault();
     keyboard.LEFT = true;
   });
   //RIGHT
-  right.addEventListener("touchstart",(e)=> {
+  right.addEventListener("touchstart", (e) => {
     e.preventDefault();
     keyboard.RIGHT = true;
   });
   //JUMP(SPACE)
-   jump.addEventListener("touchstart",(e)=> {
+  jump.addEventListener("touchstart", (e) => {
     e.preventDefault();
     keyboard.SPACE = true;
   });
   //THROW(D)
-  throwBtn.addEventListener("touchstart",(e)=> {
+  throwBtn.addEventListener("touchstart", (e) => {
     e.preventDefault();
     keyboard.D = true;
   });
-  document.addEventListener("touchend",resetMovement);
-  document.addEventListener("touchchancel",resetMovement);
+  document.addEventListener("touchend", resetMovement);
+  document.addEventListener("touchcancel", resetMovement);
 }
+

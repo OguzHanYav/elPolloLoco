@@ -184,7 +184,7 @@ class Character extends MovableObject {
   }
 playDeadAnimation() {
   const now = Date.now();
-  if (now - this.deadAnimationTime < 200) return;
+  if (now - this.deadAnimationTime < 300) return;
   this.deadAnimationTime = now;
   if (this.currentImage < this.IMAGES_DEAD.length - 1) {
     this.currentImage++;
@@ -192,6 +192,4 @@ playDeadAnimation() {
   this.img = this.imageCache[this.IMAGES_DEAD[this.currentImage]];
   this.deadAnimationFinished = this.currentImage === this.IMAGES_DEAD.length - 1;
 }
-
-
 }
