@@ -231,9 +231,9 @@ class World {
     if (this.character.isDead()) {
       if (this.character.deadAnimationFinished && !this.gameStopped) {
         setTimeout(() => {
-          this.showGameOverScreen();
           this.stopGame();
-        }, 1200)
+          this.showGameOverScreen();
+        }, 300)
       }
       return;
     }
@@ -242,9 +242,9 @@ class World {
     if (endBoss && endBoss.isDead()) {
       if (endBoss.deadAnimationFinished && !this.gameStopped) {
         setTimeout(() => {
-          this.showWinScreen();
           this.stopGame();
-        }, 1500)
+          this.showWinScreen();
+        }, 300)
       }
     }
   }

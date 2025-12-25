@@ -97,7 +97,7 @@ class MovableObject extends DrawableObject {
   }
   hit() {
     const now = new Date().getTime();
-    if (now - this.lastHit > 800) {
+    if (now - this.lastHit > 300) {
       this.world.playSound(this.world.hitCharacterSound);
       this.energy -= 5;
       if (this.energy < 0) this.energy = 0;

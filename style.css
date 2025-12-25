@@ -386,21 +386,33 @@ canvas {
 #rotate-overlay {
   position: fixed;
   inset: 0;
-  background: #000;
-  color: #fff;
+  background: rgba(200, 200, 200, 0.5); /* leicht grau */
   z-index: 9999;
 
   display: none;
   justify-content: center;
   align-items: center;
   text-align: center;
+
+  backdrop-filter: brightness(0.6); /* Canvas abdunkeln */
 }
+
 
 .rotate-message {
   font-family: "Comic Neue", "Comic Sans MS", cursive;
   font-size: 28px;
   padding: 20px;
+  color: #222;
+
+  animation: softBlink 2.5s ease-in-out infinite;
 }
+@keyframes softBlink {
+  0%   { opacity: 1; }
+  50%  { opacity: 0.35; }
+  100% { opacity: 1; }
+}
+
+
 
 /* SHOW OVERLAY IN PORTRAIT MODE */
 @media screen and (orientation: portrait) and (max-width: 900px) {
@@ -410,6 +422,9 @@ canvas {
 
   .game-container {
     display: none;
+  }
+    canvas {
+    filter: blur(2px) brightness(0.7);
   }
 }
 
