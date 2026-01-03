@@ -46,12 +46,40 @@ window.addEventListener("load", () => {
       fullscreenBtn.querySelector("img").src = "img/fullScreen.png";
     }
   });
-  //Mute Button
-  muteBtn.addEventListener("click", () => {
-    if (window.world) {
-      window.world.toggleMute();
+ // Mute Button
+const bgMusic = window.AUDIO.background;
+bgMusic.loop = true;
+bgMusic.pause(); // sicherstellen, dass die Musik zunächst nicht läuft
+
+let isMuted = true; // Standard: Mute
+muteBtn.src = "img/mute-btn-white.ico";
+
+muteBtn.addEventListener("click", () => {
+  isMuted = !isMuted;
+
+  if (isMuted) {
+    bgMusic.pause();
+    bgMusic.currentTime = 0;
+    muteBtn.src = "img/mute-btn-white.ico";
+  } else {
+    bgMusic.play().catch(() => {});
+    muteBtn.src = "img/volume-white.ico";
+  }
+
+  // Falls das Spiel schon gestartet wurde, World synchronisieren
+  if (window.world) {
+    window.world.isMuted = isMuted;
+    if (isMuted) {
+      window.world.backgroundSound.pause();
+    } else {
+      window.world.playBackground();
     }
-  });
+  }
+
+  // Optional: Zustand speichern
+  localStorage.setItem("isMuted", isMuted);
+});
+
   //Popup Info Button
   infoBtn.addEventListener("click", (event) => {
     infoPopup.classList.remove("hidden");
@@ -71,7 +99,7 @@ window.addEventListener("load", () => {
 });
 
 window.addEventListener("keydown", (e) => {
-  console.log(e.keyCode);
+
   if (e.keyCode == 39) {
     keyboard.RIGHT = true;
   }

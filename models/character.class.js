@@ -9,18 +9,30 @@ class Character extends MovableObject {
 
   idleStarttime = 0;
   isLongIdle = false;
+  jumpKeyPressed = false;
+  isJumpingAnimationPlaying = false;
+  wasInAir = false;
 
-  lastAnimationTime = 0;
+  currentAnimation = null;
+  currentImage = 0;
+
+  // Animation Timer
+  lastIdleAnimationTime = 0;
+  lastLongIdleAnimationTime = 0;
+  lastWalkAnimationTime = 0;
+  lastJumpAnimationTime = 0;
+  lastHurtAnimationTime = 0;
   deadAnimationTime = 0;
-  animationIntervalIdle = 180;
-  animationIntervalLongIdle = 260;
 
-  offset = {
-    top: 100,
-    bottom: 10,
-    left: 30,
-    right: 20,
-  };
+  // Animation Intervals
+  animationIntervalIdle = 300;
+  animationIntervalLongIdle = 400;
+  jumpAnimationInterval = 100;
+  hurtAnimationInterval = 150;
+  hurtAnimationDuration = 500;
+  hurtStartTime = 0;
+
+  offset = { top: 100, bottom: 10, left: 30, right: 20 };
 
   IMAGES_WALKING = [
     `img/2_character_pepe/2_walk/W-21.png`,
@@ -42,13 +54,14 @@ class Character extends MovableObject {
     `img/2_character_pepe/3_jump/J-38.png`,
     `img/2_character_pepe/3_jump/J-39.png`,
   ];
+
   IMAGES_DEAD = [
     `img/2_character_pepe/5_dead/D-51.png`,
     `img/2_character_pepe/5_dead/D-52.png`,
     `img/2_character_pepe/5_dead/D-53.png`,
     `img/2_character_pepe/5_dead/D-54.png`,
     `img/2_character_pepe/5_dead/D-55.png`,
-    `img/2_character_pepe/5_dead/D-56.png`
+    `img/2_character_pepe/5_dead/D-56.png`,
   ];
 
   IMAGES_HURT = [
@@ -56,6 +69,7 @@ class Character extends MovableObject {
     `img/2_character_pepe/4_hurt/H-42.png`,
     `img/2_character_pepe/4_hurt/H-43.png`,
   ];
+
   IMAGES_IDLE = [
     'img/2_character_pepe/1_idle/idle/I-1.png',
     'img/2_character_pepe/1_idle/idle/I-2.png',
@@ -97,99 +111,168 @@ class Character extends MovableObject {
   }
 
   animate() {
-    //Camera moving
     setInterval(() => {
       if (this.world.gameStopped || this.isDead()) return;
-      //Character moving Right
+
+      // Movement
       if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
         this.moveRight();
         this.otherDirection = false;
       }
-      //Character moving Left
       if (this.world.keyboard.LEFT && this.x > 0) {
         this.moveLeft();
         this.otherDirection = true;
       }
-      // Character is Jumping
-      if (this.world.keyboard.SPACE && !this.isAboveGround()) {
-        if (this.world && this.world.playSound && this.world.jumpSound) {
-          this.world.playSound(this.world.jumpSound);
-        }
+
+      // Jump
+      if (this.world.keyboard.SPACE && !this.jumpKeyPressed && !this.isAboveGround()) {
+        this.jumpKeyPressed = true;
+        this.isJumpingAnimationPlaying = true;
+        this.currentAnimation = this.IMAGES_JUMPING;
+        this.currentImage = 0;
+        this.lastJumpAnimationTime = 0;
+
+        if (this.world?.jumpSound) this.world.playSound(this.world.jumpSound);
         this.jump();
       }
+      if (!this.world.keyboard.SPACE) this.jumpKeyPressed = false;
+
       this.world.camera_x = -this.x + 100;
     }, 1000 / 60);
   }
-  // Animations
+
   updateAnimation() {
     if (this.world.gameStopped) return;
+
     const now = Date.now();
+    const onGround = !this.isAboveGround();
     const isMoving = this.world.keyboard.RIGHT || this.world.keyboard.LEFT;
     const isThrowing = this.world.keyboard.D;
 
+    // Landed reset
+    if (onGround && this.wasInAir) this.currentImage = 0;
+    this.wasInAir = !onGround;
+
+    // Dead
     if (this.isDead()) {
-      //Reset Values
       if (!this.isDeadCharacter) {
         this.isDeadCharacter = true;
         this.currentImage = 0;
         this.deadAnimationTime = 0;
-        this.deadAnimationFinished = false;
         this.img = this.imageCache[this.IMAGES_DEAD[0]];
       }
-      //Play Dead Animation
-      if (!this.deadAnimationFinished) {
-        this.playDeadAnimation();
-      }
+      if (!this.deadAnimationFinished) this.playDeadAnimation();
       return;
     }
 
-    // Jumping,Walking,Hurt,Idle Animation
+    // Hurt Animation hat immer Priorität
     if (this.isHurt()) {
-      return this.playAnimation(this.IMAGES_HURT);
+      this.playHurtAnimation();
     }
+
+    // Jump Animation
     if (this.isAboveGround()) {
-      return this.playAnimation(this.IMAGES_JUMPING);
+      this.playJumpAnimation();
+      return;
     }
+
+    // Walk Animation
     if (isMoving) {
+      this.playWalkAnimation();
       this.resetIdleState();
-      return this.playAnimation(this.IMAGES_WALKING);
+      return;
     }
-    if (isThrowing) {
-      this.resetIdleState();
-      return this.playAnimation(this.IMAGES_IDLE);
-    }
-    //Idle Time
+
+    // Idle / Long Idle
     if (!this.idleStarttime) {
       this.idleStarttime = now;
       this.isLongIdle = false;
       this.currentImage = 0;
     }
     const idleDuration = now - this.idleStarttime;
+    if (idleDuration > 4000 && !this.isLongIdle) this.isLongIdle = true;
 
-    if (idleDuration > 4000 && !this.isLongIdle) {
-      this.isLongIdle = true;
-      this.currentImage = 0;
-      this.lastAnimationTime = 0;
-    }
-    if (this.isLongIdle) {
-      this.playAnimationTimed(this.IMAGES_LONG_IDLE, this.animationIntervalIdle);
-    } else {
-      this.playAnimationTimed(this.IMAGES_IDLE, this.animationIntervalIdle);
-
-    }
+    if (this.isLongIdle) this.playLongIdleAnimation();
+    else this.playIdleAnimation();
   }
+
   resetIdleState() {
     this.idleStarttime = null;
     this.isLongIdle = false;
   }
-playDeadAnimation() {
-  const now = Date.now();
-  if (now - this.deadAnimationTime < 300) return;
-  this.deadAnimationTime = now;
-  if (this.currentImage < this.IMAGES_DEAD.length - 1) {
-    this.currentImage++;
+
+  playDeadAnimation() {
+    const now = Date.now();
+    if (now - this.deadAnimationTime < 300) return;
+    this.deadAnimationTime = now;
+    if (this.currentImage < this.IMAGES_DEAD.length - 1) this.currentImage++;
+    this.img = this.imageCache[this.IMAGES_DEAD[this.currentImage]];
+    this.deadAnimationFinished = this.currentImage === this.IMAGES_DEAD.length - 1;
   }
-  this.img = this.imageCache[this.IMAGES_DEAD[this.currentImage]];
-  this.deadAnimationFinished = this.currentImage === this.IMAGES_DEAD.length - 1;
-}
+
+  playJumpAnimation() {
+    const now = Date.now();
+    if (!this.lastJumpAnimationTime) this.lastJumpAnimationTime = now;
+    if (now - this.lastJumpAnimationTime < this.jumpAnimationInterval) return;
+    this.lastJumpAnimationTime = now;
+
+    if (this.currentImage < this.IMAGES_JUMPING.length - 1) this.currentImage++;
+    this.img = this.imageCache[this.IMAGES_JUMPING[this.currentImage]];
+  }
+
+  playWalkAnimation() {
+    const now = Date.now();
+    if (!this.lastWalkAnimationTime) this.lastWalkAnimationTime = now;
+    if (now - this.lastWalkAnimationTime < 1000 / 30) return; // schnelleres Movement
+    this.lastWalkAnimationTime = now;
+
+    if (this.currentImage < this.IMAGES_WALKING.length - 1) this.currentImage++;
+    else this.currentImage = 0;
+
+    this.img = this.imageCache[this.IMAGES_WALKING[this.currentImage]];
+  }
+
+  playIdleAnimation() {
+    const now = Date.now();
+    if (!this.lastIdleAnimationTime) this.lastIdleAnimationTime = now;
+    if (now - this.lastIdleAnimationTime < this.animationIntervalIdle) return;
+    this.lastIdleAnimationTime = now;
+
+    if (this.currentImage < this.IMAGES_IDLE.length - 1) this.currentImage++;
+    else this.currentImage = 0;
+
+    this.img = this.imageCache[this.IMAGES_IDLE[this.currentImage]];
+  }
+
+  playLongIdleAnimation() {
+    const now = Date.now();
+    if (!this.lastLongIdleAnimationTime) this.lastLongIdleAnimationTime = now;
+    if (now - this.lastLongIdleAnimationTime < this.animationIntervalLongIdle) return;
+    this.lastLongIdleAnimationTime = now;
+
+    if (this.currentImage < this.IMAGES_LONG_IDLE.length - 1) this.currentImage++;
+    else this.currentImage = 0;
+
+    this.img = this.imageCache[this.IMAGES_LONG_IDLE[this.currentImage]];
+  }
+
+  playHurtAnimation() {
+    const now = Date.now();
+    if (!this.hurtStartTime) this.hurtStartTime = now;
+    if (!this.lastHurtAnimationTime) this.lastHurtAnimationTime = now;
+
+    if (now - this.lastHurtAnimationTime < this.hurtAnimationInterval) return;
+    this.lastHurtAnimationTime = now;
+
+    if (now - this.hurtStartTime > this.hurtAnimationDuration) {
+      this.hurtStartTime = 0;
+      this.currentImage = 0;
+      return;
+    }
+
+    if (this.currentImage < this.IMAGES_HURT.length - 1) this.currentImage++;
+    else this.currentImage = 0;
+
+    this.img = this.imageCache[this.IMAGES_HURT[this.currentImage]];
+  }
 }

@@ -12,19 +12,20 @@
 
 /* BODY -------------------------------------------------*/
 body {
+  margin: 0;
+  min-height: 100vh;
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
+
   background-image: url("img/5_background/desert-9720959_640.png");
   background-size: cover;
   background-position: top;
   background-repeat: no-repeat;
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  width: 100%;
+
   overflow: hidden;
 }
+
 
 html {
   margin: 0;
@@ -41,17 +42,22 @@ html {
 /* GAME CONTAINER */
 .game-container {
   position: relative;
-  width: 100%;
-  max-width: 720px;
+  width: 720px;
+  max-width: 90vw;
   aspect-ratio: 3 / 2;
-  margin: 20px auto;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+
 
 /* CANVAS */
 canvas {
   width: 100%;
   height: 100%;
   display: block;
+  margin: 0 auto;
   border-radius: 20px;
 }
 
@@ -71,14 +77,14 @@ canvas {
     pointer-events: none;
   }
 
-  .game-container {
-    width: 100dvw;
-    height: 100dvh;
-    max-width: none;
-    max-height: none;
-    aspect-ratio: auto;
-    margin: 0;
-  }
+.game-container {
+  width: 95vw;
+  max-width: 900px;
+  aspect-ratio: 3 / 2;
+  height: auto;
+  margin: 0;
+}
+
   body.game-running .mobile-controls {
   display: block;
 }
@@ -139,42 +145,6 @@ canvas {
   display: block;
 }
 }   
-
- /* Tablet & Mobile */
- /* @media (max-width: 900px) {
-  body {
-    height: 100dvh;
-    width: 100dvw;
-  }
-
-  .game-container {
-    width: 100dvw;
-    height: 100dvh;
-    max-width: none;
-    max-height: none;
-    aspect-ratio: auto;
-    margin: 0;
-  }
-
-  canvas {
-    width: 100%;
-    height: 100%;
-    border-radius: 0;
-  }
-  #start-img,
-  #game-over-img,
-  #win-img {
-    border-radius: 0px !important;
-    pointer-events: none;
-  } */
-
-  /* .button-box img,
-  .button-box-left img {
-    width: 52px;
-    height: 52px;
-  }
-}   */ 
-
 /* START / WIN / GAME OVER SCREENS ----------------------*/
 #start-screen,
 #win-screen,

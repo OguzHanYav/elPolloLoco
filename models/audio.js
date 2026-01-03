@@ -15,18 +15,6 @@ window.AUDIO = {
 
 window.ALL_SOUNDS = Object.values(window.AUDIO);
 
-// optional: einmalig vorbereiten
-window.ALL_SOUNDS.forEach(sound => {
-  sound.preload = "auto";
-});
 
-window.resetAllSounds = function () {
-  console.log("🔄 RESET ALL SOUNDS");
-
-  window.ALL_SOUNDS.forEach(sound => {
-    sound.pause();
-    sound.currentTime = 0;
-  });
-};
 
 

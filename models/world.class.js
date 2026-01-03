@@ -132,7 +132,7 @@ class World {
     if (
       this.keyboard.D &&
       this.bottlesCollected > 0 &&
-      now - this.lastThrow > 400
+      now - this.lastThrow > 1000
     ) {
       this.lastThrow = now;
       // Startpoint to throw
@@ -385,15 +385,17 @@ class World {
   // }
 
   loadMuteState() {
-    this.isMuted = localStorage.getItem("isMuted") === "true";
-    const btn = document.getElementById("mute-btn");
-    if (btn) {
-      btn.src = this.isMuted ? "img/mute-btn-white.ico" : "img/volume-white.ico";
-    }
-    if (!this.isMuted) {
-      this.playBackground();
-    }
+  const savedMute = localStorage.getItem("isMuted");
+  this.isMuted = savedMute !== null ? savedMute === "true" : true;
+  const btn = document.getElementById("mute-btn");
+  if (btn) {
+    btn.src = this.isMuted ? "img/mute-btn-white.ico" : "img/volume-white.ico";
   }
+  if (!this.isMuted) {
+    this.playBackground();
+  }
+}
+
 
 
   toggleMute() {
@@ -419,7 +421,7 @@ class World {
     if (window.world) {
       window.world.stopGame();
     }
-    window.resetAllSounds();
+
 
     document.getElementById("game-over-screen").style.display = "none";
     document.getElementById("win-screen").style.display = "none";
