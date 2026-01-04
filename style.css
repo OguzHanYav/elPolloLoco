@@ -1,3 +1,4 @@
+/* ================= FONTS ================= */
 @font-face {
   font-family: "ComicNeue";
   src: url("Fonts/Comic_Neue/ComicNeue-Regular.ttf") format("truetype");
@@ -10,23 +11,7 @@
   font-weight: bold;
 }
 
-/* BODY -------------------------------------------------*/
-body {
-  margin: 0;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  background-image: url("img/5_background/desert-9720959_640.png");
-  background-size: cover;
-  background-position: top;
-  background-repeat: no-repeat;
-
-  overflow: hidden;
-}
-
-
+/* ================= HTML & BODY ================= */
 html {
   margin: 0;
   padding: 0;
@@ -35,24 +20,35 @@ html {
   overflow: hidden;
 }
 
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-image: url("img/5_background/desert-9720959_640.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  overflow: hidden;
+}
+
 .comic-font {
   font-family: "Comic Neue", "Comic Sans MS", cursive;
 }
 
-/* GAME CONTAINER */
+/* ================= GAME CONTAINER ================= */
 .game-container {
   position: relative;
   width: 720px;
   max-width: 90vw;
   aspect-ratio: 3 / 2;
-
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-
-/* CANVAS */
+/* ================= CANVAS ================= */
 canvas {
   width: 100%;
   height: 100%;
@@ -61,91 +57,7 @@ canvas {
   border-radius: 20px;
 }
 
-/* ================= RESPONSIVE CANVAS ================= */
-
-/* Tablets & kleinere Screens */
- @media only screen and (max-width: 900px) {
-  canvas {
-    width: 100%;
-    border-radius: 0 !important;
-
-  }
-    #start-img,
-  #game-over-img,
-  #win-img {
-    border-radius: 0 !important;
-    pointer-events: none;
-  }
-
-.game-container {
-  width: 95vw;
-  max-width: 900px;
-  aspect-ratio: 3 / 2;
-  height: auto;
-  margin: 0;
-}
-
-  body.game-running .mobile-controls {
-  display: block;
-}
-}
-
-/* Kleine Tablets & große Phones */
- @media only screen and (max-width: 720px) {
-  canvas {
-    width: 100%;
-    border-radius: 0 !important;
-
-  }
-
-  .game-container {
-    width: 100dvw;
-    height: 100dvh;
-    max-width: none;
-    max-height: none;
-    aspect-ratio: auto;
-    margin: 0;
-  }
-
-  #start-img,
-  #game-over-img,
-  #win-img {
-    border-radius: 0 !important;
-    pointer-events: none;
-  }
-  body.game-running .mobile-controls {
-  display: block;
-}
-}
-
-/* Sehr flache Screens (Landscape Mobile) */
- @media only screen and (max-height: 480px) {
-  canvas {
-    height: 100vh;
-    border-radius: 0 !important;
-
-  }
-
-  .game-container {
-    width: 100dvw;
-    height: 100dvh;
-    max-width: none;
-    max-height: none;
-    aspect-ratio: auto;
-    margin: 0;
-  }
-
-  #start-img,
-  #game-over-img,
-  #win-img {
-    border-radius: 0 !important;
-    pointer-events: none;
-  }
-  body.game-running .mobile-controls {
-  display: block;
-}
-}   
-/* START / WIN / GAME OVER SCREENS ----------------------*/
+/* ================= START / WIN / GAME OVER SCREENS ================= */
 #start-screen,
 #win-screen,
 #game-over-screen {
@@ -169,7 +81,7 @@ canvas {
   inset: 0;
 }
 
-/* START / RESTART BUTTONS ------------------------------*/
+/* ================= BUTTONS ================= */
 #start-button,
 #restart-button,
 #restart-button-win {
@@ -204,21 +116,19 @@ canvas {
   transform: translateX(-50%) scale(1.05);
 }
 
-/* GENERAL BUTTON BOX STYLE -----------------------------*/
+/* BUTTON BOXES */
 .button-box,
 .button-box-left {
   position: absolute;
   bottom: 12px;
   display: flex;
   gap: 20px;
-
   padding: 8px;
   background: rgba(0, 0, 0, 0.35);
   border-radius: 30px;
   z-index: 40;
 }
 
-/* POSITIONS: RIGHT / LEFT ------------------------------*/
 .button-box {
   right: 12px;
 }
@@ -229,7 +139,6 @@ canvas {
   padding-right: 16px;
 }
 
-/* BUTTON / ICON STYLE ----------------------------------*/
 .button-box button,
 .button-box img,
 .button-box-left img {
@@ -238,11 +147,9 @@ canvas {
   cursor: pointer;
   border: none;
   background: transparent;
-
   display: flex;
   justify-content: center;
   align-items: center;
-
   filter: brightness(1.2);
 }
 
@@ -252,7 +159,7 @@ canvas {
   filter: invert(1);
 }
 
-/* POPUP OVERLAY ----------------------------------------*/
+/* ================= POPUPS ================= */
 .popup {
   position: fixed;
   inset: 0;
@@ -269,7 +176,6 @@ canvas {
   display: none;
 }
 
-/* POPUP CONTENT ----------------------------------------*/
 .popup-content {
   background: rgba(50, 50, 50, 0.9);
   padding: 25px 35px;
@@ -297,7 +203,7 @@ canvas {
   margin: 8px 0;
 }
 
-/* FULLSCREEN MODE --------------------------------------*/
+/* ================= FULLSCREEN ================= */
 .game-container:fullscreen {
   width: 100vw;
   height: 100vh;
@@ -308,42 +214,34 @@ canvas {
   height: 100%;
 }
 
-/* RESTART WRAPPER =======================================*/
-/* RESTART WRAPPER – unten zentriert */
+/* ================= RESTART WRAPPER ================= */
 .restart-wrapper {
   position: absolute;
   bottom: 35px;
-  /* Abstand vom unteren Rand */
   left: 50%;
   transform: translateX(-50%);
-
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 10px;
-
   z-index: 50;
 }
 
-/* Restart image */
 #restart-img,
 #restart-img-win {
   width: 120px;
   height: auto;
   cursor: pointer;
-
   transition: transform 0.25s ease, filter 0.25s ease;
   filter: brightness(0.9);
 }
 
-/* Hover effect */
 #restart-img:hover,
 #restart-img-win:hover {
   transform: scale(1.12);
   filter: brightness(1.15);
 }
 
-/* Text unter Restart */
 .restart-text {
   color: #e6e6e6;
   font-size: 28px;
@@ -352,39 +250,41 @@ canvas {
   text-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
 }
 
-/* ROTATE DEVICE OVERLAY -----------------------------*/
+/* ================= ROTATE DEVICE OVERLAY ================= */
 #rotate-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(200, 200, 200, 0.5); /* leicht grau */
+  background: rgba(200, 200, 200, 0.5);
   z-index: 9999;
-
   display: none;
   justify-content: center;
   align-items: center;
   text-align: center;
-
-  backdrop-filter: brightness(0.6); /* Canvas abdunkeln */
+  backdrop-filter: brightness(0.6);
 }
-
 
 .rotate-message {
   font-family: "Comic Neue", "Comic Sans MS", cursive;
   font-size: 28px;
   padding: 20px;
   color: #222;
-
   animation: softBlink 2.5s ease-in-out infinite;
 }
+
 @keyframes softBlink {
-  0%   { opacity: 1; }
-  50%  { opacity: 0.35; }
-  100% { opacity: 1; }
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.35;
+  }
+
+  100% {
+    opacity: 1;
+  }
 }
 
-
-
-/* SHOW OVERLAY IN PORTRAIT MODE */
 @media screen and (orientation: portrait) and (max-width: 900px) {
   #rotate-overlay {
     display: flex;
@@ -393,13 +293,13 @@ canvas {
   .game-container {
     display: none;
   }
-    canvas {
+
+  canvas {
     filter: blur(2px) brightness(0.7);
   }
 }
 
 /* ================= MOBILE TOUCH CONTROLS ================= */
-
 .mobile-controls {
   position: absolute;
   inset: 0;
@@ -407,28 +307,10 @@ canvas {
   display: none;
 }
 
-
-
-
-/* LINKS: laufen */
-.mobile-left {
-  position: absolute;
-  bottom: 110px;
-  /* ⬅️ deutlich höher */
-  left: 20px;
-  display: flex;
-  gap: 18px;
-  pointer-events: auto;
-  z-index: 200;
-  background: rgba(255, 0, 0, 0.2);
-}
-
-/* RECHTS: springen / werfen */
+.mobile-left,
 .mobile-right {
   position: absolute;
   bottom: 110px;
-  /* ⬅️ gleich hoch wie links */
-  right: 20px;
   display: flex;
   gap: 18px;
   pointer-events: auto;
@@ -436,7 +318,13 @@ canvas {
   background: rgba(255, 0, 0, 0.2);
 }
 
+.mobile-left {
+  left: 20px;
+}
 
+.mobile-right {
+  right: 20px;
+}
 
 .touch-btn {
   width: 64px;
@@ -450,4 +338,184 @@ canvas {
   justify-content: center;
   opacity: 0.6;
   user-select: none;
+}
+
+/* ================= IMPRESSUM ================= */
+.impressum-body {
+  background: linear-gradient(135deg, #2b2b2b, #1a1a1a);
+  font-family: "Comic Neue", "Comic Sans MS", cursive;
+  color: #f2f2f2;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  overflow: hidden;
+}
+
+.impressum-container {
+  max-width: 700px;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.65);
+  padding: 25px 35px;
+  border-radius: 20px;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.6);
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.impressum-content {
+  overflow-y: auto;
+  flex-grow: 1;
+  padding-right: 5px;
+}
+
+.impressum-container h1 {
+  margin-top: 0;
+  font-size: 36px;
+  text-align: center;
+}
+
+.impressum-container p {
+  line-height: 1.4;
+  margin-bottom: 14px;
+  font-size: 18px;
+}
+
+.back-link {
+  display: block;
+  margin: 10px 0;
+  text-align: center;
+  color: #ffb347;
+  text-decoration: none;
+  font-size: 18px;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+/* ================= LEGAL FOOTER ================= */
+.legal-footer {
+  position: fixed;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  font-size: 14px;
+  z-index: 10000;
+  background: rgba(0, 0, 0, 0.25);
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+
+.legal-footer a {
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: none;
+}
+
+.legal-footer a:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+/* ================= PAGE LAYOUT FIX ================= */
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ================= MEDIA QUERIES SORTED ================= */
+/* Max-width 900px */
+@media only screen and (max-width: 900px) {
+  canvas {
+    border-radius: 0 !important;
+  }
+
+  #start-img,
+  #game-over-img,
+  #win-img {
+    border-radius: 0 !important;
+    pointer-events: none;
+  }
+
+  .game-container {
+    width: 95vw;
+    max-width: 900px;
+    aspect-ratio: 3/2;
+    height: auto;
+    margin: 0;
+  }
+
+  body.game-running .mobile-controls {
+    display: block;
+  }
+}
+
+/* Max-width 720px */
+@media only screen and (max-width: 720px) {
+  .game-container {
+    width: 100dvw;
+    height: 100dvh;
+    max-width: none;
+    max-height: none;
+    aspect-ratio: auto;
+    margin: 0;
+  }
+
+  body.game-running .mobile-controls {
+    display: block;
+  }
+
+  .impressum-container {
+    padding: 15px 20px;
+    max-height: 85vh;
+  }
+
+  .impressum-container h1 {
+    font-size: 28px;
+  }
+
+  .impressum-container p {
+    font-size: 16px;
+  }
+
+  .back-link {
+    font-size: 16px;
+  }
+
+  .legal-footer {
+    font-size: 12px;
+    padding: 3px 8px;
+  }
+}
+
+/* Max-height 480px */
+@media only screen and (max-height: 480px) {
+  canvas {
+    height: 100vh;
+    border-radius: 0 !important;
+  }
+
+  .game-container {
+    width: 100dvw;
+    height: 100dvh;
+    max-width: none;
+    max-height: none;
+    aspect-ratio: auto;
+    margin: 0;
+  }
+
+  #start-img,
+  #game-over-img,
+  #win-img {
+    border-radius: 0 !important;
+    pointer-events: none;
+  }
+
+  body.game-running .mobile-controls {
+    display: block;
+  }
 }
