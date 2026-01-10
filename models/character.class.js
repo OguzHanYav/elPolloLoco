@@ -16,7 +16,6 @@ class Character extends MovableObject {
   currentAnimation = null;
   currentImage = 0;
 
-  // Animation Timer
   lastIdleAnimationTime = 0;
   lastLongIdleAnimationTime = 0;
   lastWalkAnimationTime = 0;
@@ -24,7 +23,6 @@ class Character extends MovableObject {
   lastHurtAnimationTime = 0;
   deadAnimationTime = 0;
 
-  // Animation Intervals
   animationIntervalIdle = 300;
   animationIntervalLongIdle = 400;
   jumpAnimationInterval = 100;
@@ -35,39 +33,39 @@ class Character extends MovableObject {
   offset = { top: 100, bottom: 10, left: 30, right: 20 };
 
   IMAGES_WALKING = [
-    `img/2_character_pepe/2_walk/W-21.png`,
-    `img/2_character_pepe/2_walk/W-22.png`,
-    `img/2_character_pepe/2_walk/W-23.png`,
-    `img/2_character_pepe/2_walk/W-24.png`,
-    `img/2_character_pepe/2_walk/W-25.png`,
-    `img/2_character_pepe/2_walk/W-26.png`,
+    'img/2_character_pepe/2_walk/W-21.png',
+    'img/2_character_pepe/2_walk/W-22.png',
+    'img/2_character_pepe/2_walk/W-23.png',
+    'img/2_character_pepe/2_walk/W-24.png',
+    'img/2_character_pepe/2_walk/W-25.png',
+    'img/2_character_pepe/2_walk/W-26.png',
   ];
 
   IMAGES_JUMPING = [
-    `img/2_character_pepe/3_jump/J-31.png`,
-    `img/2_character_pepe/3_jump/J-32.png`,
-    `img/2_character_pepe/3_jump/J-33.png`,
-    `img/2_character_pepe/3_jump/J-34.png`,
-    `img/2_character_pepe/3_jump/J-35.png`,
-    `img/2_character_pepe/3_jump/J-36.png`,
-    `img/2_character_pepe/3_jump/J-37.png`,
-    `img/2_character_pepe/3_jump/J-38.png`,
-    `img/2_character_pepe/3_jump/J-39.png`,
+    'img/2_character_pepe/3_jump/J-31.png',
+    'img/2_character_pepe/3_jump/J-32.png',
+    'img/2_character_pepe/3_jump/J-33.png',
+    'img/2_character_pepe/3_jump/J-34.png',
+    'img/2_character_pepe/3_jump/J-35.png',
+    'img/2_character_pepe/3_jump/J-36.png',
+    'img/2_character_pepe/3_jump/J-37.png',
+    'img/2_character_pepe/3_jump/J-38.png',
+    'img/2_character_pepe/3_jump/J-39.png',
   ];
 
   IMAGES_DEAD = [
-    `img/2_character_pepe/5_dead/D-51.png`,
-    `img/2_character_pepe/5_dead/D-52.png`,
-    `img/2_character_pepe/5_dead/D-53.png`,
-    `img/2_character_pepe/5_dead/D-54.png`,
-    `img/2_character_pepe/5_dead/D-55.png`,
-    `img/2_character_pepe/5_dead/D-56.png`,
+    'img/2_character_pepe/5_dead/D-51.png',
+    'img/2_character_pepe/5_dead/D-52.png',
+    'img/2_character_pepe/5_dead/D-53.png',
+    'img/2_character_pepe/5_dead/D-54.png',
+    'img/2_character_pepe/5_dead/D-55.png',
+    'img/2_character_pepe/5_dead/D-56.png',
   ];
 
   IMAGES_HURT = [
-    `img/2_character_pepe/4_hurt/H-41.png`,
-    `img/2_character_pepe/4_hurt/H-42.png`,
-    `img/2_character_pepe/4_hurt/H-43.png`,
+    'img/2_character_pepe/4_hurt/H-41.png',
+    'img/2_character_pepe/4_hurt/H-42.png',
+    'img/2_character_pepe/4_hurt/H-43.png',
   ];
 
   IMAGES_IDLE = [
@@ -114,27 +112,26 @@ class Character extends MovableObject {
     setInterval(() => {
       if (this.world.gameStopped || this.isDead()) return;
 
-      // Movement
       if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
         this.moveRight();
         this.otherDirection = false;
       }
+
       if (this.world.keyboard.LEFT && this.x > 0) {
         this.moveLeft();
         this.otherDirection = true;
       }
 
-      // Jump
       if (this.world.keyboard.SPACE && !this.jumpKeyPressed && !this.isAboveGround()) {
         this.jumpKeyPressed = true;
         this.isJumpingAnimationPlaying = true;
         this.currentAnimation = this.IMAGES_JUMPING;
         this.currentImage = 0;
         this.lastJumpAnimationTime = 0;
-
         if (this.world?.jumpSound) AudioManager.play(this.world.jumpSound);
         this.jump();
       }
+
       if (!this.world.keyboard.SPACE) this.jumpKeyPressed = false;
 
       this.world.camera_x = -this.x + 100;
@@ -147,13 +144,10 @@ class Character extends MovableObject {
     const now = Date.now();
     const onGround = !this.isAboveGround();
     const isMoving = this.world.keyboard.RIGHT || this.world.keyboard.LEFT;
-    const isThrowing = this.world.keyboard.D;
 
-    // Landed reset
     if (onGround && this.wasInAir) this.currentImage = 0;
     this.wasInAir = !onGround;
 
-    // Dead
     if (this.isDead()) {
       if (!this.isDeadCharacter) {
         this.isDeadCharacter = true;
@@ -165,30 +159,27 @@ class Character extends MovableObject {
       return;
     }
 
-    // Hurt Animation hat immer Priorität
     if (this.isHurt()) {
       this.playHurtAnimation();
     }
 
-    // Jump Animation
     if (this.isAboveGround()) {
       this.playJumpAnimation();
       return;
     }
 
-    // Walk Animation
     if (isMoving) {
       this.playWalkAnimation();
       this.resetIdleState();
       return;
     }
 
-    // Idle / Long Idle
     if (!this.idleStarttime) {
       this.idleStarttime = now;
       this.isLongIdle = false;
       this.currentImage = 0;
     }
+
     const idleDuration = now - this.idleStarttime;
     if (idleDuration > 4000 && !this.isLongIdle) this.isLongIdle = true;
 
@@ -215,7 +206,6 @@ class Character extends MovableObject {
     if (!this.lastJumpAnimationTime) this.lastJumpAnimationTime = now;
     if (now - this.lastJumpAnimationTime < this.jumpAnimationInterval) return;
     this.lastJumpAnimationTime = now;
-
     if (this.currentImage < this.IMAGES_JUMPING.length - 1) this.currentImage++;
     this.img = this.imageCache[this.IMAGES_JUMPING[this.currentImage]];
   }
@@ -223,12 +213,10 @@ class Character extends MovableObject {
   playWalkAnimation() {
     const now = Date.now();
     if (!this.lastWalkAnimationTime) this.lastWalkAnimationTime = now;
-    if (now - this.lastWalkAnimationTime < 1000 / 30) return; // schnelleres Movement
+    if (now - this.lastWalkAnimationTime < 1000 / 30) return;
     this.lastWalkAnimationTime = now;
-
     if (this.currentImage < this.IMAGES_WALKING.length - 1) this.currentImage++;
     else this.currentImage = 0;
-
     this.img = this.imageCache[this.IMAGES_WALKING[this.currentImage]];
   }
 
@@ -237,10 +225,8 @@ class Character extends MovableObject {
     if (!this.lastIdleAnimationTime) this.lastIdleAnimationTime = now;
     if (now - this.lastIdleAnimationTime < this.animationIntervalIdle) return;
     this.lastIdleAnimationTime = now;
-
     if (this.currentImage < this.IMAGES_IDLE.length - 1) this.currentImage++;
     else this.currentImage = 0;
-
     this.img = this.imageCache[this.IMAGES_IDLE[this.currentImage]];
   }
 
@@ -249,10 +235,8 @@ class Character extends MovableObject {
     if (!this.lastLongIdleAnimationTime) this.lastLongIdleAnimationTime = now;
     if (now - this.lastLongIdleAnimationTime < this.animationIntervalLongIdle) return;
     this.lastLongIdleAnimationTime = now;
-
     if (this.currentImage < this.IMAGES_LONG_IDLE.length - 1) this.currentImage++;
     else this.currentImage = 0;
-
     this.img = this.imageCache[this.IMAGES_LONG_IDLE[this.currentImage]];
   }
 
@@ -260,19 +244,15 @@ class Character extends MovableObject {
     const now = Date.now();
     if (!this.hurtStartTime) this.hurtStartTime = now;
     if (!this.lastHurtAnimationTime) this.lastHurtAnimationTime = now;
-
     if (now - this.lastHurtAnimationTime < this.hurtAnimationInterval) return;
     this.lastHurtAnimationTime = now;
-
     if (now - this.hurtStartTime > this.hurtAnimationDuration) {
       this.hurtStartTime = 0;
       this.currentImage = 0;
       return;
     }
-
     if (this.currentImage < this.IMAGES_HURT.length - 1) this.currentImage++;
     else this.currentImage = 0;
-
     this.img = this.imageCache[this.IMAGES_HURT[this.currentImage]];
   }
 }

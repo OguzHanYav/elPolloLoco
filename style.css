@@ -518,3 +518,31 @@ canvas {
     display: block;
   }
 }
+/* Max-height 600px – ähnlich wie 480px */
+@media only screen and (max-height: 680px) {
+  canvas {
+    height: 100vh;
+    border-radius: 0 !important;
+  }
+
+  .game-container {
+    width: 100dvw;
+    height: 100dvh;
+    max-width: none;
+    max-height: none;
+    aspect-ratio: auto;
+    margin: 0;
+  }
+
+  #start-img,
+  #game-over-img,
+  #win-img {
+    border-radius: 0 !important;
+    pointer-events: none;
+  }
+
+  body.game-running .mobile-controls {
+    display: block;
+  }
+}
+

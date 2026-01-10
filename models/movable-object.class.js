@@ -6,14 +6,15 @@ class MovableObject extends DrawableObject {
   energy = 100;
   lastHit = 0;
   static nextId = 1;
+  gravityInterval = null;
+
   offset = {
     top: 0,
     bottom: 0,
     left: 0,
     right: 0,
   };
-
-  gravityInterval = null;
+  
   constructor(groundY = 430) {
     super();
     this.id = MovableObject.nextId++;
@@ -37,11 +38,9 @@ class MovableObject extends DrawableObject {
     }, 1000 / 25);
   }
 
-
   isAboveGround() {
     return this.y + this.height < this.groundY;
   }
-
 
   stopGravity() {
     if (this.gravityInterval) {
@@ -69,7 +68,6 @@ class MovableObject extends DrawableObject {
     this.currentImage++;
   }
 
-
   jump() {
     this.speedY = 30;
   }
@@ -82,6 +80,7 @@ class MovableObject extends DrawableObject {
       this.y + this.offset.top < mo.y + mo.height - mo.offset.bottom
     );
   }
+
   hit() {
     const now = new Date().getTime();
     if (now - this.lastHit > 300) {
@@ -91,9 +90,11 @@ class MovableObject extends DrawableObject {
       this.lastHit = now;
     }
   }
+
   isDead() {
     return this.energy <= 0;
   }
+
   isHurt() {
     return new Date().getTime() - this.lastHit < 500;
   }
@@ -101,9 +102,11 @@ class MovableObject extends DrawableObject {
   setOnGround() {
     this.y = this.groundY - this.height;
   }
+
   updatePrevY() {
     this.prevY = this.y;
   }
+  
   playAnimationTimed(images, interval) {
     const now = Date.now();
     if (!this.lastAnimationTime) {

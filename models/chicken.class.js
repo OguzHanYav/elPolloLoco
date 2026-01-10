@@ -6,13 +6,16 @@ class Chicken extends MovableObject {
     `img/3_enemies_chicken/chicken_normal/1_walk/2_w.png`,
     `img/3_enemies_chicken/chicken_normal/1_walk/3_w.png`,
   ];
+
   IMAGES_DEAD = [`img/3_enemies_chicken/chicken_normal/2_dead/dead.png`];
+
   offset = {
     top: 10,
     bottom: 10,
     left: 10,
     right: 10,
   };
+
   isDeadChicken = false;
   deadAnimationFinished = false;
   animationInterval = 200;
@@ -27,6 +30,7 @@ class Chicken extends MovableObject {
     this.speed = 0.15 + Math.random() * 0.5;
     this.setOnGround();
   }
+
   updateAnimation(now) {
     if (this.isDeadChicken) {
       this.handleDeathAnimation();
@@ -39,13 +43,16 @@ class Chicken extends MovableObject {
       }
     }
   }
+
   die() {
     this.isDeadChicken = true;
     this.deadAnimationFinished = false;
   }
+
   hit() {
     if (!this.isDeadChicken) this.die();
   }
+
   handleDeathAnimation() {
     if (!this.deadAnimationFinished) {
       this.playAnimation(this.IMAGES_DEAD);
