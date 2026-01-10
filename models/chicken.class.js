@@ -1,3 +1,7 @@
+/**
+ * Huhn-Gegner
+ * @extends MovableObject
+ */
 class Chicken extends MovableObject {
   height = 90;
   width = 90;
@@ -21,6 +25,12 @@ class Chicken extends MovableObject {
   animationInterval = 200;
   lastAnimationTime = 0;
 
+  /**
+   * Erstellt ein Chicken-Objekt
+   * @param {number} x Startposition X
+   * @param {number} y Startposition Y
+   * @param {World} world Spielwelt
+   */
   constructor() {
     super().loadImage(`img/3_enemies_chicken/chicken_normal/1_walk/1_w.png`);
     this.loadImages(this.IMAGES_WALKING);
@@ -31,6 +41,10 @@ class Chicken extends MovableObject {
     this.setOnGround();
   }
 
+  /**
+   * Aktualisiert die Animation des Huhns
+   * @param {number} now Aktuelle Zeit in ms
+   */
   updateAnimation(now) {
     if (this.isDeadChicken) {
       this.handleDeathAnimation();
@@ -44,15 +58,24 @@ class Chicken extends MovableObject {
     }
   }
 
+  /**
+   * Setzt das Chicken in den Todeszustand
+   */
   die() {
     this.isDeadChicken = true;
     this.deadAnimationFinished = false;
   }
 
+  /**
+   * Behandelt Treffer auf das Chicken
+   */
   hit() {
     if (!this.isDeadChicken) this.die();
   }
 
+  /**
+   * Spielt die Todesanimation ab und entfernt das Chicken nach 1 Sekunde
+   */
   handleDeathAnimation() {
     if (!this.deadAnimationFinished) {
       this.playAnimation(this.IMAGES_DEAD);

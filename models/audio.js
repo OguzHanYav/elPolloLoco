@@ -1,3 +1,13 @@
+/**
+ * @file audio.js
+ * Zentrale Audioverwaltung für El Pollo Loco.
+ * Beinhaltet Sound-Initialisierung, Mute-Handling und Background-Musik.
+ */
+
+/**
+ * Gibt den gespeicherten Mute-Status aus dem LocalStorage zurück.
+ * @returns {boolean} true wenn stumm, sonst false
+ */
 function getSavedMuteState() {
   const value = localStorage.getItem("isMuted");
   return value !== null ? value === "true" : true;
@@ -19,6 +29,9 @@ window.AUDIO = {
 
 window.ALL_SOUNDS = Object.values(window.AUDIO);
 
+/**
+ * Globaler AudioManager zur Steuerung aller Sounds.
+ */
 window.AudioManager = {
   isMuted: getSavedMuteState(),
   unlocked: false,
@@ -43,12 +56,20 @@ window.AudioManager = {
     this.unlocked = true;
   },
 
+  /**
+   * Spielt einen Soundeffekt ab.
+   * @param {HTMLAudioElement} sound
+   */
   play(sound) {
     if (!sound || this.isMuted || !this.unlocked) return;
     sound.currentTime = 0;
     sound.play().catch(() => {});
   },
 
+  /**
+   * Startet die Hintergrundmusik.
+   * @param {HTMLAudioElement} sound
+   */
   playBackground(sound) {
     if (!sound || this.isMuted || !this.unlocked) return;
     sound.pause();
@@ -56,9 +77,7 @@ window.AudioManager = {
     sound.loop = true;
     sound.muted = false;
     setTimeout(() => {
-      sound.play()
-        .then(() => console.log("BG-Musik läuft jetzt!"))
-        .catch(err => console.error("BG-Musik konnte nicht gestartet werden:", err));
+      sound.play().catch(() => {});
     }, 50);
   },
 
@@ -68,6 +87,10 @@ window.AudioManager = {
     sound.currentTime = 0;
   },
 
+  /**
+   * Setzt den Mute-Status.
+   * @param {boolean} value
+   */
   setMuted(value) {
     this.isMuted = value;
     localStorage.setItem("isMuted", value);

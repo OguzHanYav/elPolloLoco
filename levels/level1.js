@@ -1,3 +1,8 @@
+/**
+ * Erstellt und gibt das erste Level des Spiels zurück
+ * 
+ * @returns {Level} Level-Objekt mit Gegnern, Clouds und Hintergrundobjekten
+ */
 function createLevel1() {
   return new Level(
     [

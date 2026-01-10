@@ -2,12 +2,18 @@ let canvas;
 let world;
 let keyboard = new Keyboard();
 
+/**
+ * Initialisiert das Spiel
+ */
 function init() {
   canvas = document.getElementById("canvas");
   world = new World(canvas, keyboard);
   window.world = world;
 }
 
+/**
+ * Öffnet das Impressum-Popup
+ */
 function openImpressum() {
   if (document.getElementById('impressum-popup')) return;
 
@@ -109,6 +115,9 @@ window.addEventListener("load", () => {
   });
 });
 
+/**
+ * Tastendruck-Ereignisse
+ */
 window.addEventListener("keydown", (e) => {
   if (e.keyCode == 39) keyboard.RIGHT = true;
   if (e.keyCode == 37) keyboard.LEFT = true;
@@ -127,6 +136,9 @@ window.addEventListener("keyup", (e) => {
   if (e.keyCode == 68) keyboard.D = false;
 });
 
+/**
+ * Initialisiert UI-Buttons (Restart, Home)
+ */
 function initUIButtons() {
   if (window.uiInitialized) return;
   const restartBtn = document.getElementById("restart-btn");
@@ -151,7 +163,13 @@ function initUIButtons() {
   window.uiInitialized = true;
 }
 
+/**
+ * Initialisiert mobile Steuerung über Touch-Buttons
+ */
 function initMobileControls() {
+  if (!isTabletOrTouchDevice()) return;
+  document.body.classList.add("game.running");
+
   const left = document.getElementById("btn-left");
   const right = document.getElementById("btn-right");
   const jump = document.getElementById("btn-jump");
@@ -174,7 +192,30 @@ function initMobileControls() {
   document.addEventListener("touchcancel", resetMovement);
 }
 
+/**
+ * Gibt zurück, ob der Ton stummgeschaltet ist
+ * @returns {boolean}
+ */
 function getSavedMuteState() {
   const value = localStorage.getItem("isMuted");
   return value !== null ? value === "true" : true;
+}
+
+/**
+ * Prüft, ob das Gerät ein Desktop-Gerät ist
+ * @returns {boolean}
+ */
+function isDesktop() {
+  return navigator.maxTouchPoints === 0;
+}
+
+/**
+ * Prüft, ob das Gerät ein Tablet oder Touch-Gerät ist
+ * @returns {boolean}
+ */
+function isTabletOrTouchDevice() {
+  return (
+    navigator.maxTouchPoints > 0 &&
+    window.innerWidth >= 600
+  );
 }

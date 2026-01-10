@@ -1,3 +1,6 @@
+/**
+ * Spielwelt, verwaltet Charakter, Gegner, Objekte und Logik
+ */
 class World {
   level;
   character;
@@ -52,10 +55,12 @@ class World {
     this.draw();
   }
 
+  /** Leert das Canvas */
   clearCanvas() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
   }
 
+  /** Stoppt das Spiel und alle Intervalle */
   stopGame() {
     this.gameStopped = true;
     if (this.intervalId) {
@@ -68,6 +73,7 @@ class World {
     }
   }
 
+  /** Weist Charakter und Gegnern die Welt zu */
   setWorld() {
     this.character.world = this;
     this.level.enemies.forEach(enemy => {
@@ -75,6 +81,7 @@ class World {
     });
   }
 
+  /** Haupt-Update-Loop */
   run() {
     this.intervalId = setInterval(() => {
       if (this.gameStopped) return;
@@ -94,6 +101,7 @@ class World {
     }, 1000 / 60);
   }
 
+  /** Erstellt alle sammelbaren Objekte */
   creatCollectables() {
     return [
       new CollectableObjectBottle(300, 360),
@@ -121,6 +129,7 @@ class World {
     ];
   }
 
+  /** Prüft, ob der Spieler eine Flasche wirft */
   checkThrowObjects() {
     if (this.gameStopped) return;
     const now = new Date().getTime();
@@ -138,6 +147,7 @@ class World {
     }
   }
 
+  /** Prüft Kollisionen mit sammelbaren Objekten */
   checkCollectableCollisions() {
     this.collectables.forEach((item, index) => {
       if (this.character.isColliding(item)) {
@@ -156,6 +166,7 @@ class World {
     });
   }
 
+  /** Prüft Kollisionen zwischen Charakter und Gegnern */
   checkCollisions() {
     this.enemiesToKill = [];
     this.level.enemies.forEach(enemy => {
@@ -179,6 +190,7 @@ class World {
     this.enemiesToKill.forEach(id => this.killEnemyById(id));
   }
 
+  /** Prüft Kollisionen zwischen Flaschen und Gegnern */
   checkThrowCollision() {
     this.throwableObjects.forEach(bottle => {
       if (!bottle || bottle.isBroken) return;
@@ -200,6 +212,7 @@ class World {
     });
   }
 
+  /** Prüft, ob das Spiel gewonnen oder verloren wurde */
   checkGameEnd() {
     const endBoss = this.level.enemies.find(enemy => enemy.isEndboss);
 
@@ -223,16 +236,19 @@ class World {
     }
   }
 
+  /** Zeigt das Game Over Screen */
   showGameOverScreen() {
     document.body.classList.remove("game-running");
     document.getElementById("game-over-screen").style.display = "flex";
   }
 
+  /** Zeigt das Win Screen */
   showWinScreen() {
     document.body.classList.remove("game-running");
     document.getElementById("win-screen").style.display = "flex";
   }
 
+  /** Zeichnet alle Objekte auf das Canvas */
   draw() {
     this.throwableObjects = this.throwableObjects.filter(bottle => !bottle.markedForRemoval);
     if (this.gameStopped) return;
@@ -258,12 +274,14 @@ class World {
     this.animationFrameId = requestAnimationFrame(() => this.draw());
   }
 
+  /** Fügt mehrere Objekte zum Canvas hinzu */
   addObjectsToMap(objects) {
     objects.forEach(o => {
       this.addToMap(o);
     });
   }
 
+  /** Zeichnet ein MovableObject und spiegelt es ggf. */
   addToMap(mo) {
     if (mo.otherDirection) this.flipImage(mo);
     mo.draw(this.ctx);
@@ -271,6 +289,7 @@ class World {
     if (mo.otherDirection) this.flipImageBack(mo);
   }
 
+  /** Spiegeln eines Objektes horizontal */
   flipImage(mo) {
     this.ctx.save();
     this.ctx.translate(mo.x + mo.width, mo.y);
@@ -278,10 +297,12 @@ class World {
     this.ctx.translate(-mo.x, -mo.y);
   }
 
+  /** Spiegelung zurücksetzen */
   flipImageBack(mo) {
     this.ctx.restore();
   }
 
+  /** Spielt den passenden Sound beim Gegner */
   playEnemyDeathSound(enemy) {
     if (enemy.isEndboss) {
       if (enemy.isDead()) {
@@ -303,6 +324,7 @@ class World {
     }
   }
 
+  /** Tötet einen Gegner anhand seiner ID */
   killEnemyById(id) {
     const enemy = this.level.enemies.find(e => e.id === id);
     if (enemy && !enemy.isDeadChicken && typeof enemy.die === "function") {
@@ -311,12 +333,14 @@ class World {
     }
   }
 
+  /** Entfernt Gegner aus der Welt, wenn tot */
   removeEnemyWhenDead(enemy) {
     if (enemy.isEndboss) return;
     const index = this.level.enemies.findIndex(e => e.id === enemy.id);
     if (index !== -1) this.level.enemies.splice(index, 1);
   }
 
+  /** Startet ein neues Spiel */
   startNewGame() {
     if (window.world) window.world.stopGame();
     document.getElementById("game-over-screen").style.display = "none";

@@ -1,3 +1,7 @@
+/**
+ * Kleiner Huhn-Gegner
+ * @extends MovableObject
+ */
 class SmallChicken extends MovableObject {
   height = 70;
   width = 70;
@@ -22,6 +26,9 @@ class SmallChicken extends MovableObject {
   animationInterval = 200;
   lastAnimationTime = 0;
 
+  /**
+   * Initialisiert das kleine Huhn
+   */
   constructor() {
     super().loadImage(`img/3_enemies_chicken/chicken_small/1_walk/1_w.png`);
     this.loadImages(this.IMAGES_WALKING);
@@ -32,6 +39,10 @@ class SmallChicken extends MovableObject {
     this.setOnGround();
   }
 
+  /**
+   * Aktualisiert Animationen
+   * @param {number} now Aktuelle Zeit in ms
+   */
   updateAnimation(now) {
     if (this.isDeadChicken) {
       this.handleDeathAnimation();
@@ -45,15 +56,24 @@ class SmallChicken extends MovableObject {
     }
   }
 
+  /**
+   * Markiert das Huhn als tot
+   */
   die() {
     this.isDeadChicken = true;
     this.deadAnimationFinished = false;
   }
 
+  /**
+   * Huhn wird getroffen
+   */
   hit() {
     if (!this.isDeadChicken) this.die();
   }
 
+  /**
+   * Spielt Todesanimation ab und entfernt Huhn nach kurzer Zeit
+   */
   handleDeathAnimation() {
     if (!this.deadAnimationFinished) {
       this.playAnimation(this.IMAGES_DEAD);

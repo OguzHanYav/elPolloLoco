@@ -1,3 +1,7 @@
+/**
+ * Statusleiste für den Endgegner
+ * @extends DrawableObject
+ */
 class EndBossBar extends DrawableObject {
   IMAGES_ENDBOSSBAR = [
     `img/7_statusbars/2_statusbar_endboss/orange/orange0.png`,
@@ -17,13 +21,21 @@ class EndBossBar extends DrawableObject {
     this.loadImages(this.IMAGES_ENDBOSSBAR);
     this.setPercentage(100);
   }
-  
+
+  /**
+   * Setzt den aktuellen Prozentwert der Endboss-Leiste
+   * @param {number} percentage 
+   */
   setPercentage(percentage) {
     this.percentage = percentage;
     let path = this.IMAGES_ENDBOSSBAR[this.resolveImageIndex()];
     this.img = this.imageCache[path];
   }
 
+  /**
+   * Bestimmt den Index des Bildes basierend auf der Prozentzahl
+   * @returns {number}
+   */
   resolveImageIndex() {
     if (this.percentage === 100) {
       return 5;

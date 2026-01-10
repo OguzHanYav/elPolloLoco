@@ -1,3 +1,7 @@
+/**
+ * Statusleiste für die gesammelten Flaschen
+ * @extends DrawableObject
+ */
 class BottleBar extends DrawableObject {
   IMAGES_BOTTLE = [
     `img/7_statusbars/1_statusbar/3_statusbar_bottle/blue/0.png`,
@@ -18,12 +22,20 @@ class BottleBar extends DrawableObject {
     this.setPercentage(0);
   }
 
+  /**
+   * Setzt den Füllstand der Flaschenleiste
+   * @param {number} percentage Prozentsatz (0-100)
+   */
   setPercentage(percentage) {
     this.percentage = percentage;
     let path = this.IMAGES_BOTTLE[this.resolveImageIndex()];
     this.img = this.imageCache[path];
   }
 
+  /**
+   * Berechnet den Index des Bildes, das zur aktuellen Prozentzahl passt
+   * @returns {number} Index des Bildes
+   */
   resolveImageIndex() {
     if (this.percentage === 100) {
       return 5;

@@ -1,3 +1,8 @@
+/**
+ * HTML-Inhalt für das Impressum-Popup
+ * Wird dynamisch über openImpressum() in die Seite eingefügt.
+ * @type {string}
+ */
 const impressumHTML = `
 <div class="impressum-container">
   <h1>Impressum</h1>

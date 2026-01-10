@@ -1,3 +1,7 @@
+/**
+ * Wolken-Objekt im Hintergrund
+ * @extends MovableObject
+ */
 class Cloud extends MovableObject {
     width = 500;
     height = 250;
@@ -8,7 +12,10 @@ class Cloud extends MovableObject {
         this.x = Math.random() * 500;
         this.animate();
     }
-    
+
+    /**
+     * Bewegt die Wolke kontinuierlich nach links
+     */
     animate() {
         setInterval(() => {
             this.moveLeft();

@@ -1,3 +1,7 @@
+/**
+ * Hauptcharakter des Spiels
+ * @extends MovableObject
+ */
 class Character extends MovableObject {
   height = 250;
   width = 120;
@@ -94,6 +98,10 @@ class Character extends MovableObject {
     'img/2_character_pepe/1_idle/long_idle/I-20.png',
   ];
 
+  /**
+   * Erstellt den Hauptcharakter
+   * @param {World} world - Die Spielwelt, in der der Charakter agiert
+   */
   constructor(world) {
     super().loadImage('img/2_character_pepe/1_idle/idle/I-1.png');
     this.world = world;
@@ -108,6 +116,9 @@ class Character extends MovableObject {
     this.setOnGround();
   }
 
+  /**
+   * Steuerung der Bewegung und Kamera
+   */
   animate() {
     setInterval(() => {
       if (this.world.gameStopped || this.isDead()) return;
@@ -138,6 +149,9 @@ class Character extends MovableObject {
     }, 1000 / 60);
   }
 
+  /**
+   * Aktualisiert die Animationen abhängig vom Zustand (Gehen, Springen, Idle, Treffer, Tod)
+   */
   updateAnimation() {
     if (this.world.gameStopped) return;
 

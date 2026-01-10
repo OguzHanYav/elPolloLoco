@@ -1,3 +1,7 @@
+/**
+ * Endgegner des Spiels
+ * @extends MovableObject
+ */
 class EndBoss extends MovableObject {
   height = 450;
   width = 250;
@@ -52,6 +56,9 @@ class EndBoss extends MovableObject {
     `img/4_enemie_boss_chicken/3_attack/G20.png`,
   ];
 
+  /**
+   * Erstellt den Endboss und lädt alle benötigten Bilder
+   */
   constructor() {
     super();
     this.loadImage(this.IMAGES_ALERT[0]);
@@ -70,6 +77,9 @@ class EndBoss extends MovableObject {
     this.animationInterval = 150;
   }
 
+  /**
+   * Aktualisiert die Animation des Endbosses abhängig vom Zustand
+   */
   updateAnimation() {
     const now = new Date().getTime();
 
@@ -91,6 +101,9 @@ class EndBoss extends MovableObject {
     }
   }
 
+  /**
+   * Aktualisiert den Zustand des Endbosses (gehen, angreifen)
+   */
   updateState() {
     if (this.isDeadBoss) return;
     const charDistance = this.world.character.x - this.x;
@@ -107,6 +120,9 @@ class EndBoss extends MovableObject {
     this.otherDirection = char.x > this.x;
   }
 
+  /**
+   * Löst den Angriff des Endbosses aus
+   */
   triggerAttack() {
     this.attackTriggered = true;
   }
@@ -136,6 +152,9 @@ class EndBoss extends MovableObject {
     }
   }
 
+  /**
+   * Verringert die Energie des Endbosses bei Treffer
+   */
   hit() {
     if (this.isDeadBoss) return;
     this.energy -= 20;
@@ -148,6 +167,10 @@ class EndBoss extends MovableObject {
     setTimeout(() => (this.isHurt = false), 300);
   }
 
+  /**
+   * Prüft, ob der Endboss tot ist
+   * @returns {boolean} true, wenn Energie <= 0
+   */
   isDead() {
     return this.energy <= 0;
   }

@@ -1,3 +1,7 @@
+/**
+ * Statusleiste für gesammelte Münzen
+ * @extends DrawableObject
+ */
 class CoinsBar extends DrawableObject {
   IMAGES_COIN = [
     `img/7_statusbars/1_statusbar/1_statusbar_coin/blue/0.png`,
@@ -18,12 +22,20 @@ class CoinsBar extends DrawableObject {
     this.setPercentage(0);
   }
 
+  /**
+   * Setzt den Fortschritt der Münzenleiste
+   * @param {number} percentage - Wert zwischen 0 und 100
+   */
   setPercentage(percentage) {
     this.percentage = percentage;
     let path = this.IMAGES_COIN[this.resolveImageIndex()];
     this.img = this.imageCache[path];
   }
 
+  /**
+   * Wählt das passende Bild basierend auf dem Prozentsatz
+   * @returns {number} Index des Bildes
+   */
   resolveImageIndex() {
     if (this.percentage === 100) {
       return 5;

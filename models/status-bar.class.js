@@ -1,6 +1,12 @@
+/**
+ * Statusleiste für die Lebensanzeige des Charakters
+ * @extends DrawableObject
+ */
 class StatusBar extends DrawableObject {
+  /** Aktueller Lebens-Prozentsatz (0-100) */
   percentage = 100;
 
+  /** Array der Bildpfade für die verschiedenen Lebensstufen */
   IMAGES = [
     `img/7_statusbars/1_statusbar/2_statusbar_health/blue/0.png`,
     `img/7_statusbars/1_statusbar/2_statusbar_health/blue/20.png`,
@@ -10,6 +16,9 @@ class StatusBar extends DrawableObject {
     `img/7_statusbars/1_statusbar/2_statusbar_health/blue/100.png`,
   ];
 
+  /**
+   * Erstellt eine StatusBar und lädt die Bilder
+   */
   constructor() {
     super();
     this.x = 20;
@@ -19,13 +28,21 @@ class StatusBar extends DrawableObject {
     this.loadImages(this.IMAGES);
     this.setPercentage(100);
   }
-  
+
+  /**
+   * Setzt den Lebensprozentsatz und aktualisiert das Bild
+   * @param {number} percentage Wert zwischen 0 und 100
+   */
   setPercentage(percentage) {
     this.percentage = percentage;
     let path = this.IMAGES[this.resolveImageIndex()];
     this.img = this.imageCache[path];
   }
 
+  /**
+   * Ermittelt den Index des Bildes basierend auf dem aktuellen Prozentsatz
+   * @returns {number} Index des Bildes im IMAGES-Array
+   */
   resolveImageIndex() {
     if (this.percentage === 100) {
       return 5;

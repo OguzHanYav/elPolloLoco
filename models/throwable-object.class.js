@@ -1,3 +1,7 @@
+/**
+ * Werfbares Objekt (z.B. Flasche)
+ * @extends MovableObject
+ */
 class ThrowableObject extends MovableObject {
   speedX = 10;
   splashActive = false;
@@ -16,6 +20,11 @@ class ThrowableObject extends MovableObject {
     "img/6_salsa_bottle/bottle_rotation/bottle_splash/6_bottle_splash.png",
   ];
 
+  /**
+   * @param {number} x Startposition X
+   * @param {number} y Startposition Y
+   * @param {boolean} [throwLeft=false] Richtung links werfen
+   */
   constructor(x, y, throwLeft = false) {
     super();
     this.loadImage(`img/6_salsa_bottle/salsa_bottle.png`);
@@ -30,6 +39,9 @@ class ThrowableObject extends MovableObject {
     this.throw();
   }
 
+  /**
+   * Startet den Wurf und Animationen
+   */
   throw() {
     this.speedY = 25;
     this.applyGravity();
@@ -40,12 +52,14 @@ class ThrowableObject extends MovableObject {
     }, 50);
   }
 
+  /** Spielt Rotationsanimation ab */
   throwAnimation() {
     this.rotationInvterval = setInterval(() => {
       this.playAnimation(this.rotationImages);
     }, 100);
   }
 
+  /** Bewegt das Objekt nach links oder rechts */
   throwInterval() {
     this.moveInterval = setInterval(() => {
       if (!this.isBroken) {
@@ -54,13 +68,19 @@ class ThrowableObject extends MovableObject {
     }, 25);
   }
 
+  /** Prüft, ob das Objekt den Boden erreicht */
   checkSplash() {
     const groundY = 400;
     if (this.y > groundY && !this.isBroken) {
       this.playSplashAnimation();
     }
   }
-  
+
+  /**
+   * Spielt die Splash-/Zerbruchsanimation ab
+   * @param {number} [collisionX] Optional X-Koordinate des Aufpralls
+   * @param {number} [collisionY] Optional Y-Koordinate des Aufpralls
+   */
   playSplashAnimation(collisionX, collisionY) {
     this.isBroken = true;
     this.splashActive = true;
