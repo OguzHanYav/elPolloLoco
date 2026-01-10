@@ -1,6 +1,6 @@
 class ThrowableObject extends MovableObject {
   speedX = 10;
-  splashActive =false;
+  splashActive = false;
   rotationImages = [
     "img/6_salsa_bottle/bottle_rotation/1_bottle_rotation.png",
     "img/6_salsa_bottle/bottle_rotation/2_bottle_rotation.png",
@@ -47,19 +47,21 @@ class ThrowableObject extends MovableObject {
   }
 
   throwInterval() {
-   this.moveInterval = setInterval(() => {
+    this.moveInterval = setInterval(() => {
       if (!this.isBroken) {
         this.x += this.throwLeft ? - this.speedX : this.speedX;
-      } 
+      }
     }, 25);
   }
-  checkSplash(){
+
+  checkSplash() {
     const groundY = 400;
     if (this.y > groundY && !this.isBroken) {
       this.playSplashAnimation();
     }
   }
-  playSplashAnimation(collisionX,collisionY){
+  
+  playSplashAnimation(collisionX, collisionY) {
     this.isBroken = true;
     this.splashActive = true;
     this.markedForRemoval = false;
@@ -73,17 +75,17 @@ class ThrowableObject extends MovableObject {
 
     let i = 0;
     const splashInterval = setInterval(() => {
-      if (i< this.splashImages.length) {
+      if (i < this.splashImages.length) {
         this.loadImage(this.splashImages[i]);
         i++;
-      }else {
+      } else {
         clearInterval(splashInterval);
         setTimeout(() => {
-          this.splashActive =false;
+          this.splashActive = false;
           this.isBroken = true;
-          this.markedForRemoval=true;
+          this.markedForRemoval = true;
         }, 1000);
       }
-    }, 100); 
+    }, 100);
   }
 }

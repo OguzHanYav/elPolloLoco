@@ -132,7 +132,7 @@ class Character extends MovableObject {
         this.currentImage = 0;
         this.lastJumpAnimationTime = 0;
 
-        if (this.world?.jumpSound) this.world.playSound(this.world.jumpSound);
+        if (this.world?.jumpSound) AudioManager.play(this.world.jumpSound);
         this.jump();
       }
       if (!this.world.keyboard.SPACE) this.jumpKeyPressed = false;

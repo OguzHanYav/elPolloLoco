@@ -21,7 +21,7 @@ class World {
   bottlesCollected = 0;
   enemiesToKill = [];
 
-  //Sounds
+  // Sounds
   jumpSound = window.AUDIO.jump;
   throwSound = window.AUDIO.throw;
   collectBottleSound = window.AUDIO.collectBottle;
@@ -35,7 +35,6 @@ class World {
   endbossDeathSound = window.AUDIO.endbossDeath;
 
 
-  isMuted = false;
   gameStopped = false;
   endbossDeathSoundPlayed = false;
 
@@ -44,7 +43,6 @@ class World {
     this.ctx = canvas.getContext("2d");
     this.canvas = canvas;
     this.keyboard = keyboard;
-    this.backgroundSound.loop = true;
     this.character = new Character(this);
     this.collectables = this.creatCollectables();
     this.maxCoins = this.collectables.filter(
@@ -56,7 +54,6 @@ class World {
     this.setWorld();
     this.run();
     this.draw();
-    this.loadMuteState();
   }
   clearCanvas() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -151,7 +148,7 @@ class World {
       this.bottleBar.setPercentage(
         (this.bottlesCollected / this.maxBottles) * 100
       );
-      this.playSound(this.throwSound);
+      AudioManager.play(this.throwSound);
     }
   }
   checkCollectableCollisions() {
@@ -163,7 +160,7 @@ class World {
           this.coinBar.setPercentage(
             (this.coinsCollected / this.maxCoins) * 100
           );
-          this.playSound(this.collectCoinSound);
+          AudioManager.play(this.collectCoinSound);
         }
         //Bottles
         if (item instanceof CollectableObjectBottle) {
@@ -171,7 +168,7 @@ class World {
           this.bottleBar.setPercentage(
             (this.bottlesCollected / this.maxBottles) * 100
           );
-          this.playSound(this.collectBottleSound);
+          AudioManager.play(this.collectBottleSound);
         }
         this.collectables.splice(index, 1);
       }
@@ -211,7 +208,7 @@ class World {
         if (bottle.isColliding(enemy)) {
           const collisionY = bottle.y;
           const collisionX = bottle.x;
-          this.playSound(this.splashSound);
+          AudioManager.play(this.splashSound);
           bottle.playSplashAnimation(collisionX, collisionY);
           if (enemy.isEndboss) {
             this.playEnemyDeathSound(enemy);
@@ -278,11 +275,11 @@ class World {
     this.addToMap(this.endbossBar);
     this.ctx.translate(this.camera_x, 0);
 
-    this.addToMap(this.character);
     this.addObjectsToMap(this.level.clouds);
+    this.addObjectsToMap(this.collectables);
     this.addObjectsToMap(this.level.enemies);
     this.addObjectsToMap(this.throwableObjects);
-    this.addObjectsToMap(this.collectables);
+    this.addToMap(this.character);
     this.ctx.translate(-this.camera_x, 0);
     this.animationFrameId = requestAnimationFrame(() => this.draw());
   }
@@ -314,41 +311,28 @@ class World {
   flipImageBack(mo) {
     this.ctx.restore();
   }
-  playSound(sound) {
-    if (this.isMuted || !sound) return;
-    sound.currentTime = 0;
-    sound.play().catch(() => { });
-  }
-
-  playBackground() {
-    if (this.isMuted || !this.backgroundSound.paused) return;
-    this.backgroundSound.currentTime = 0;
-    this.backgroundSound.loop = true;
-    this.backgroundSound.play().catch(() => { });
-  }
-
 
   playEnemyDeathSound(enemy) {
     if (enemy.isEndboss) {
       if (enemy.isDead()) {
         if (!this.endbossDeathSoundPlayed) {
           this.endbossDeathSoundPlayed = true;
-          this.playSound(this.endbossDeathSound);
+          AudioManager.play(this.endbossDeathSound);
         }
         return;
       }
       if (this.endbossDeathSoundPlayed) return;
-      this.playSound(this.endbossAttackSound);
+      AudioManager.play(this.endbossAttackSound);
       return;
     }
     if (enemy instanceof SmallChicken) {
       if (this.smallChickenDeathSound) {
-        this.playSound(this.smallChickenDeathSound);
+        AudioManager.play(this.smallChickenDeathSound);
       }
     }
     if (enemy instanceof Chicken) {
       if (this.chickenDeathSound) {
-        this.playSound(this.chickenDeathSound);
+        AudioManager.play(this.chickenDeathSound);
       }
     }
   }
@@ -357,7 +341,7 @@ class World {
     const enemy = this.level.enemies.find((e) => e.id === id);
     if (enemy && !enemy.isDeadChicken && typeof enemy.die === "function") {
       if (enemy.isEndboss && this.endbossDeathSound) {
-        this.playSound(this.endbossDeathSound);
+        AudioManager.play(this.endbossDeathSound);
       }
       enemy.die();
     }
@@ -369,60 +353,10 @@ class World {
     if (index !== -1) this.level.enemies.splice(index, 1);
   }
 
-  // loadMuteState() {
-  //   const savedMute = localStorage.getItem("isMuted") === "true";
-  //   this.isMuted = savedMute;
-  //   window.ALL_SOUNDS.forEach(sound => {
-  //     sound.muted = savedMute;
-  //     if (!savedMute) {
-  //       sound.currentTime = 0;
-  //     }
-  //   });
-  //   const btn = document.getElementById("mute-btn");
-  //   if (btn) {
-  //     btn.src = savedMute ? "img/mute-btn-white.ico" : "img/volume-white.ico";
-  //   }
-  // }
-
-  loadMuteState() {
-  const savedMute = localStorage.getItem("isMuted");
-  this.isMuted = savedMute !== null ? savedMute === "true" : true;
-  const btn = document.getElementById("mute-btn");
-  if (btn) {
-    btn.src = this.isMuted ? "img/mute-btn-white.ico" : "img/volume-white.ico";
-  }
-  if (!this.isMuted) {
-    this.playBackground();
-  }
-}
-
-
-
-  toggleMute() {
-    this.isMuted = !this.isMuted;
-    localStorage.setItem("isMuted", this.isMuted);
-
-    if (this.isMuted) {
-      this.backgroundSound.pause();
-      this.backgroundSound.currentTime = 0;
-    } else {
-      this.playBackground();
-    };
-
-    const btn = document.getElementById("mute-btn");
-    if (btn) {
-      btn.src = this.isMuted
-        ? "img/mute-btn-white.ico"
-        : "img/volume-white.ico";
-    }
-  }
-
   startNewGame() {
     if (window.world) {
       window.world.stopGame();
     }
-
-
     document.getElementById("game-over-screen").style.display = "none";
     document.getElementById("win-screen").style.display = "none";
     document.getElementById("canvas").style.display = "block";

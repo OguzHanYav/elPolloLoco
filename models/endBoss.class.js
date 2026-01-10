@@ -69,6 +69,7 @@ class EndBoss extends MovableObject {
     this.lastAnimationTime = 0;
     this.animationInterval = 150;
   }
+
   updateAnimation() {
     const now = new Date().getTime();
 
@@ -77,11 +78,11 @@ class EndBoss extends MovableObject {
       if (!this.world || !this.world.character) return;
       this.updateState();
       if (this.isDeadBoss) this.handleDeathAnimation();
-      else if (this.isHurt)this.playAnimation(this.IMAGES_HURT);
-      else if (this.isAttacking){
+      else if (this.isHurt) this.playAnimation(this.IMAGES_HURT);
+      else if (this.isAttacking) {
         this.playAnimation(this.IMAGES_ATTACK);
         this.handleAttackMovement();
-      } 
+      }
       else if (this.isWalking) {
         this.playAnimation(this.IMAGES_WALKING);
         this.handleWalking();
@@ -90,7 +91,7 @@ class EndBoss extends MovableObject {
     }
   }
 
-  updateState(){
+  updateState() {
     if (this.isDeadBoss) return;
     const charDistance = this.world.character.x - this.x;
     this.isWalking = !this.attackTriggered && Math.abs(charDistance) < this.walkDistance;
@@ -99,39 +100,42 @@ class EndBoss extends MovableObject {
     this.otherDirection = this.world.character.x > this.x;
   }
 
-  handleWalking(){
+  handleWalking() {
     if (!this.isWalking) return;
     const char = this.world.character;
     this.x += char.x > this.x ? 5 : -5;
     this.otherDirection = char.x > this.x;
   }
 
-  triggerAttack(){
+  triggerAttack() {
     this.attackTriggered = true;
   }
-  handleAttackMovement(){
+
+  handleAttackMovement() {
     const char = this.world.character;
     const moveStep = this.isAttacking ? 40 : 5;
 
-    if (char.x < this.x){
+    if (char.x < this.x) {
       this.x -= moveStep;
       this.otherDirection = false;
-    }else if (char.x > this.x){
+    } else if (char.x > this.x) {
       this.x += moveStep;
       this.otherDirection = true;
     }
   }
+
   handleDeathAnimation() {
     if (!this.deadAnimationFinished) {
-      this.playAnimation(this.IMAGES_DEAD ,300);
+      this.playAnimation(this.IMAGES_DEAD, 300);
 
-      if (this.currentImage >= this.IMAGES_DEAD.length-1) {
+      if (this.currentImage >= this.IMAGES_DEAD.length - 1) {
         this.deadAnimationFinished = true;
       }
     } else {
-      this.loadImage(this.IMAGES_DEAD[this.IMAGES_DEAD.length -1]);
+      this.loadImage(this.IMAGES_DEAD[this.IMAGES_DEAD.length - 1]);
     }
   }
+
   hit() {
     if (this.isDeadBoss) return;
     this.energy -= 20;

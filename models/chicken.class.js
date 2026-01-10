@@ -53,7 +53,7 @@ class Chicken extends MovableObject {
       this.speed = 0;
       if (this.world) {
         setTimeout(() => {
-        this.world.removeEnemyWhenDead(this);
+          this.world.removeEnemyWhenDead(this);
         }, 1000);
       }
     }
