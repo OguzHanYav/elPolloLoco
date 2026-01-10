@@ -8,6 +8,25 @@ function init() {
   window.world = world;
 }
 
+function openImpressum() {
+  if (document.getElementById('impressum-popup')) return;
+
+  const popup = document.createElement('div');
+  popup.id = 'impressum-popup';
+  popup.className = 'popup impressum-body';
+
+  popup.innerHTML = impressumHTML;
+  document.body.appendChild(popup);
+
+  document.getElementById('close-impressum').onclick = (e) => {
+    e.preventDefault();
+    popup.remove();
+  };
+
+  popup.addEventListener('click', () => popup.remove());
+  popup.querySelector('.impressum-container').addEventListener('click', e => e.stopPropagation());
+}
+
 window.addEventListener("load", () => {
   const playBtn = document.getElementById("play-btn");
   const startScreen = document.getElementById("start-screen");
@@ -17,6 +36,10 @@ window.addEventListener("load", () => {
   const infoBtn = document.getElementById("info-btn");
   const infoPopup = document.getElementById("info-popup");
   const canvas = document.getElementById("canvas");
+  const impressum = document.getElementById("impressum-btn");
+  const bgMusic = AUDIO.background;
+  bgMusic.loop = true;
+  const savedMute = getSavedMuteState();
 
   initUIButtons();
   initMobileControls();
@@ -58,9 +81,6 @@ window.addEventListener("load", () => {
     if (!document.fullscreenElement) fullscreenBtn.querySelector("img").src = "img/fullScreen.png";
   });
 
-  const bgMusic = AUDIO.background;
-  bgMusic.loop = true;
-  const savedMute = getSavedMuteState();
   muteBtn.src = savedMute ? "img/mute-btn-white.ico" : "img/volume-white.ico";
 
   muteBtn.addEventListener("click", () => {
@@ -81,6 +101,11 @@ window.addEventListener("load", () => {
 
   infoPopup.querySelector(".popup-content").addEventListener("click", (event) => {
     event.stopPropagation();
+  });
+
+  impressum.addEventListener('click', (e) => {
+    e.preventDefault();
+    openImpressum();
   });
 });
 

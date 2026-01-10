@@ -350,6 +350,7 @@ canvas {
   align-items: center;
   padding: 20px;
   overflow: hidden;
+  z-index: 10001;
 }
 
 .impressum-container {
@@ -362,6 +363,7 @@ canvas {
   max-height: 90vh;
   display: flex;
   flex-direction: column;
+  z-index: 10002;
 }
 
 .impressum-content {
