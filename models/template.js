@@ -1,6 +1,6 @@
 /**
- * HTML-Inhalt für das Impressum-Popup
- * Wird dynamisch über openImpressum() in die Seite eingefügt.
+ * HTML content for the legal notice (Impressum) popup.
+ * This markup is dynamically injected into the page via the openImpressum() function.
  * @type {string}
  */
 const impressumHTML = `

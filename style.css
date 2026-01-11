@@ -307,6 +307,10 @@ canvas {
   display: none;
 }
 
+body.touch-controls-active .mobile-controls {
+  display: block;
+}
+
 .mobile-left,
 .mobile-right {
   position: absolute;
@@ -520,6 +524,7 @@ canvas {
     display: block;
   }
 }
+
 /* Max-height 600px – ähnlich wie 480px */
 @media only screen and (max-height: 680px) {
   canvas {
@@ -547,4 +552,3 @@ canvas {
     display: block;
   }
 }
-

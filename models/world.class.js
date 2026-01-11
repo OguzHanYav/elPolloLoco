@@ -1,5 +1,6 @@
 /**
- * Spielwelt, verwaltet Charakter, Gegner, Objekte und Logik
+ * Represents the game world and controls all core game logic,
+ * rendering, collisions, and game state.
  */
 class World {
   level;
@@ -38,8 +39,9 @@ class World {
   endbossDeathSoundPlayed = false;
 
   /**
-   * @param {HTMLCanvasElement} canvas 
-   * @param {Keyboard} keyboard 
+   * Creates the game world.
+   * @param {HTMLCanvasElement} canvas - The game canvas.
+   * @param {Keyboard} keyboard - Keyboard input handler.
    */
   constructor(canvas, keyboard) {
     this.level = createLevel1();
@@ -47,7 +49,7 @@ class World {
     this.canvas = canvas;
     this.keyboard = keyboard;
     this.character = new Character(this);
-    this.collectables = this.creatCollectables();
+    this.collectables = this.createCollectables();
     this.maxCoins = this.collectables.filter(c => c instanceof CollectableObjectCoin).length;
     this.maxBottles = this.collectables.filter(c => c instanceof CollectableObjectBottle).length;
     this.setWorld();
@@ -55,33 +57,41 @@ class World {
     this.draw();
   }
 
-  /** Leert das Canvas */
+  /**
+   * Clears the entire canvas.
+   */
   clearCanvas() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
   }
 
-  /** Stoppt das Spiel und alle Intervalle */
+  /**
+   * Stops the game and all active intervals and animations.
+   */
   stopGame() {
     this.gameStopped = true;
+
     if (this.intervalId) {
       clearInterval(this.intervalId);
       this.intervalId = null;
     }
+
     if (this.animationFrameId) {
       cancelAnimationFrame(this.animationFrameId);
       this.animationFrameId = null;
     }
   }
 
-  /** Weist Charakter und Gegnern die Welt zu */
+  /**
+   * Assigns the world reference to character and enemies.
+   */
   setWorld() {
     this.character.world = this;
-    this.level.enemies.forEach(enemy => {
-      enemy.world = this;
-    });
+    this.level.enemies.forEach(enemy => enemy.world = this);
   }
 
-  /** Haupt-Update-Loop */
+  /**
+   * Starts the main game update loop.
+   */
   run() {
     this.intervalId = setInterval(() => {
       if (this.gameStopped) return;
@@ -101,8 +111,11 @@ class World {
     }, 1000 / 60);
   }
 
-  /** Erstellt alle sammelbaren Objekte */
-  creatCollectables() {
+  /**
+   * Creates all collectable objects for the level.
+   * @returns {Array}
+   */
+  createCollectables() {
     return [
       new CollectableObjectBottle(300, 360),
       new CollectableObjectBottle(600, 360),
@@ -129,17 +142,25 @@ class World {
     ];
   }
 
-  /** Prüft, ob der Spieler eine Flasche wirft */
+  /**
+   * Checks if the player throws a bottle.
+   */
   checkThrowObjects() {
     if (this.gameStopped) return;
+
     const now = new Date().getTime();
     if (this.keyboard.D && this.bottlesCollected > 0 && now - this.lastThrow > 1000) {
       this.lastThrow = now;
-      let offsetX = this.character.otherDirection ? -30 : 80;
-      let offsetY = 30;
-      let bottleX = this.character.x + offsetX;
-      let bottleY = this.character.y + offsetY;
-      let bottle = new ThrowableObject(bottleX, bottleY, this.character.otherDirection);
+
+      const offsetX = this.character.otherDirection ? -30 : 80;
+      const offsetY = 30;
+
+      const bottle = new ThrowableObject(
+        this.character.x + offsetX,
+        this.character.y + offsetY,
+        this.character.otherDirection
+      );
+
       this.throwableObjects.push(bottle);
       this.bottlesCollected--;
       this.bottleBar.setPercentage((this.bottlesCollected / this.maxBottles) * 100);
@@ -147,7 +168,9 @@ class World {
     }
   }
 
-  /** Prüft Kollisionen mit sammelbaren Objekten */
+  /**
+   * Checks collisions with collectable objects.
+   */
   checkCollectableCollisions() {
     this.collectables.forEach((item, index) => {
       if (this.character.isColliding(item)) {
@@ -156,51 +179,57 @@ class World {
           this.coinBar.setPercentage((this.coinsCollected / this.maxCoins) * 100);
           AudioManager.play(this.collectCoinSound);
         }
+
         if (item instanceof CollectableObjectBottle) {
           this.bottlesCollected++;
           this.bottleBar.setPercentage((this.bottlesCollected / this.maxBottles) * 100);
           AudioManager.play(this.collectBottleSound);
         }
+
         this.collectables.splice(index, 1);
       }
     });
   }
 
-  /** Prüft Kollisionen zwischen Charakter und Gegnern */
+  /**
+   * Checks collisions between the character and enemies.
+   */
   checkCollisions() {
     this.enemiesToKill = [];
+
     this.level.enemies.forEach(enemy => {
       if (this.character.isColliding(enemy)) {
-        const prevCharBottom = this.character.prevY + this.character.height;
-        const charBottom = this.character.y + this.character.height;
-        const minFallDistance = 20;
-        const isFromAbove = charBottom - prevCharBottom >= minFallDistance;
+        const prevBottom = this.character.prevY + this.character.height;
+        const currentBottom = this.character.y + this.character.height;
+        const isFromAbove = currentBottom - prevBottom >= 20;
 
         if (isFromAbove && (enemy instanceof SmallChicken || enemy instanceof Chicken)) {
           this.playEnemyDeathSound(enemy);
           enemy.hit();
           enemy.HasBeenHit = true;
           this.enemiesToKill.push(enemy.id);
-        } else if (!isFromAbove && !enemy.HasBeenHit) {
+        } else if (!enemy.HasBeenHit) {
           this.character.hit();
           this.statusBar.setPercentage(this.character.energy);
         }
       }
     });
+
     this.enemiesToKill.forEach(id => this.killEnemyById(id));
   }
 
-  /** Prüft Kollisionen zwischen Flaschen und Gegnern */
+  /**
+   * Checks collisions between throwable objects and enemies.
+   */
   checkThrowCollision() {
     this.throwableObjects.forEach(bottle => {
       if (!bottle || bottle.isBroken) return;
 
       this.level.enemies.forEach(enemy => {
         if (bottle.isColliding(enemy)) {
-          const collisionY = bottle.y;
-          const collisionX = bottle.x;
           AudioManager.play(this.splashSound);
-          bottle.playSplashAnimation(collisionX, collisionY);
+          bottle.playSplashAnimation(bottle.x, bottle.y);
+
           if (enemy.isEndboss) {
             this.playEnemyDeathSound(enemy);
             enemy.hit();
@@ -212,45 +241,48 @@ class World {
     });
   }
 
-  /** Prüft, ob das Spiel gewonnen oder verloren wurde */
+  /**
+   * Checks if the game is won or lost.
+   */
   checkGameEnd() {
     const endBoss = this.level.enemies.find(enemy => enemy.isEndboss);
 
-    if (this.character.isDead()) {
-      if (this.character.deadAnimationFinished && !this.gameStopped) {
-        setTimeout(() => {
-          this.stopGame();
-          this.showGameOverScreen();
-        }, 300);
-      }
-      return;
+    if (this.character.isDead() && this.character.deadAnimationFinished) {
+      setTimeout(() => {
+        this.stopGame();
+        this.showGameOverScreen();
+      }, 300);
     }
 
-    if (endBoss && endBoss.isDead()) {
-      if (endBoss.deadAnimationFinished && !this.gameStopped) {
-        setTimeout(() => {
-          this.stopGame();
-          this.showWinScreen();
-        }, 300);
-      }
+    if (endBoss && endBoss.isDead() && endBoss.deadAnimationFinished) {
+      setTimeout(() => {
+        this.stopGame();
+        this.showWinScreen();
+      }, 300);
     }
   }
 
-  /** Zeigt das Game Over Screen */
+  /**
+   * Displays the game over screen.
+   */
   showGameOverScreen() {
     document.body.classList.remove("game-running");
     document.getElementById("game-over-screen").style.display = "flex";
   }
 
-  /** Zeigt das Win Screen */
+  /**
+   * Displays the win screen.
+   */
   showWinScreen() {
     document.body.classList.remove("game-running");
     document.getElementById("win-screen").style.display = "flex";
   }
 
-  /** Zeichnet alle Objekte auf das Canvas */
+  /**
+   * Draws all game objects on the canvas.
+   */
   draw() {
-    this.throwableObjects = this.throwableObjects.filter(bottle => !bottle.markedForRemoval);
+    this.throwableObjects = this.throwableObjects.filter(b => !b.markedForRemoval);
     if (this.gameStopped) return;
 
     this.clearCanvas();
@@ -270,26 +302,34 @@ class World {
     this.addObjectsToMap(this.level.enemies);
     this.addObjectsToMap(this.throwableObjects);
     this.addToMap(this.character);
+
     this.ctx.translate(-this.camera_x, 0);
     this.animationFrameId = requestAnimationFrame(() => this.draw());
   }
 
-  /** Fügt mehrere Objekte zum Canvas hinzu */
+  /**
+   * Draws multiple objects on the canvas.
+   * @param {Array} objects
+   */
   addObjectsToMap(objects) {
-    objects.forEach(o => {
-      this.addToMap(o);
-    });
+    objects.forEach(o => this.addToMap(o));
   }
 
-  /** Zeichnet ein MovableObject und spiegelt es ggf. */
+  /**
+   * Draws a single object and mirrors it if necessary.
+   * @param {MovableObject} mo
+   */
   addToMap(mo) {
     if (mo.otherDirection) this.flipImage(mo);
     mo.draw(this.ctx);
     mo.drawFrame(this.ctx);
-    if (mo.otherDirection) this.flipImageBack(mo);
+    if (mo.otherDirection) this.flipImageBack();
   }
 
-  /** Spiegeln eines Objektes horizontal */
+  /**
+   * Mirrors an object horizontally.
+   * @param {MovableObject} mo
+   */
   flipImage(mo) {
     this.ctx.save();
     this.ctx.translate(mo.x + mo.width, mo.y);
@@ -297,58 +337,61 @@ class World {
     this.ctx.translate(-mo.x, -mo.y);
   }
 
-  /** Spiegelung zurücksetzen */
-  flipImageBack(mo) {
+  /**
+   * Restores the canvas transformation.
+   */
+  flipImageBack() {
     this.ctx.restore();
   }
 
-  /** Spielt den passenden Sound beim Gegner */
+  /**
+   * Plays the appropriate sound when an enemy is hit or killed.
+   * @param {*} enemy
+   */
   playEnemyDeathSound(enemy) {
     if (enemy.isEndboss) {
-      if (enemy.isDead()) {
-        if (!this.endbossDeathSoundPlayed) {
-          this.endbossDeathSoundPlayed = true;
-          AudioManager.play(this.endbossDeathSound);
-        }
-        return;
+      if (enemy.isDead() && !this.endbossDeathSoundPlayed) {
+        this.endbossDeathSoundPlayed = true;
+        AudioManager.play(this.endbossDeathSound);
+      } else if (!this.endbossDeathSoundPlayed) {
+        AudioManager.play(this.endbossAttackSound);
       }
-      if (this.endbossDeathSoundPlayed) return;
-      AudioManager.play(this.endbossAttackSound);
       return;
     }
-    if (enemy instanceof SmallChicken && this.smallChickenDeathSound) {
-      AudioManager.play(this.smallChickenDeathSound);
-    }
-    if (enemy instanceof Chicken && this.chickenDeathSound) {
-      AudioManager.play(this.chickenDeathSound);
-    }
+
+    if (enemy instanceof SmallChicken) AudioManager.play(this.smallChickenDeathSound);
+    if (enemy instanceof Chicken) AudioManager.play(this.chickenDeathSound);
   }
 
-  /** Tötet einen Gegner anhand seiner ID */
+  /**
+   * Removes an enemy by its ID.
+   * @param {number} id
+   */
   killEnemyById(id) {
     const enemy = this.level.enemies.find(e => e.id === id);
-    if (enemy && !enemy.isDeadChicken && typeof enemy.die === "function") {
-      if (enemy.isEndboss && this.endbossDeathSound) AudioManager.play(this.endbossDeathSound);
-      enemy.die();
-    }
+    if (enemy && typeof enemy.die === "function") enemy.die();
   }
 
-  /** Entfernt Gegner aus der Welt, wenn tot */
+  /**
+   * Removes a dead enemy from the world.
+   * @param {*} enemy
+   */
   removeEnemyWhenDead(enemy) {
     if (enemy.isEndboss) return;
     const index = this.level.enemies.findIndex(e => e.id === enemy.id);
     if (index !== -1) this.level.enemies.splice(index, 1);
   }
 
-  /** Startet ein neues Spiel */
+  /**
+   * Starts a new game.
+   */
   startNewGame() {
     if (window.world) window.world.stopGame();
+
     document.getElementById("game-over-screen").style.display = "none";
     document.getElementById("win-screen").style.display = "none";
-    document.getElementById("canvas").style.display = "block";
     document.body.classList.add("game-running");
-    const newWorld = new World(this.canvas, this.keyboard);
-    window.world = newWorld;
-    world = newWorld;
+
+    window.world = new World(this.canvas, this.keyboard);
   }
 }

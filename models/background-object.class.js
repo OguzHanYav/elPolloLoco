@@ -1,18 +1,19 @@
 /**
- * Hintergrundobjekt des Spiels (z.B. Boden, Layer)
+ * Background object of the game (e.g. ground or background layers).
  * @extends MovableObject
  */
 class BackgroundObject extends MovableObject {
-    width = 720;
-    height = 480;
+  width = 720;
+  height = 480;
 
-    /**
-     * @param {string} imagePath Pfad zum Bild des Hintergrundobjekts
-     * @param {number} x X-Position des Objekts
-     */
-    constructor(imagePath, x) {
-        super().loadImage(imagePath);
-        this.y = 480 - this.height;
-        this.x = x;
-    }
+  /**
+   * Creates a background object.
+   * @param {string} imagePath Path to the background image
+   * @param {number} x Horizontal position of the object
+   */
+  constructor(imagePath, x) {
+    super().loadImage(imagePath);
+    this.y = 480 - this.height;
+    this.x = x;
+  }
 }

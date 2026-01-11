@@ -1,5 +1,5 @@
 /**
- * Basisklasse für alle Objekte, die auf dem Canvas gezeichnet werden.
+ * Base class for all objects that are drawn on the canvas.
  */
 class DrawableObject {
   x = 120;
@@ -12,8 +12,8 @@ class DrawableObject {
   offset = { left: 0, right: 0, top: 0, bottom: 0 };
 
   /**
-   * Zeichnet das Objekt auf das Canvas
-   * @param {CanvasRenderingContext2D} ctx 
+   * Draws the object on the canvas.
+   * @param {CanvasRenderingContext2D} ctx - The rendering context.
    */
   draw(ctx) {
     if (this.img) {
@@ -22,8 +22,8 @@ class DrawableObject {
   }
 
   /**
-   * Optionaler Rahmen zum Debuggen
-   * @param {CanvasRenderingContext2D} ctx 
+   * Draws an optional frame around the object (used for debugging).
+   * @param {CanvasRenderingContext2D} ctx - The rendering context.
    */
   drawFrame(ctx) {
     ctx.beginPath();
@@ -31,8 +31,8 @@ class DrawableObject {
   }
 
   /**
-   * Lädt ein einzelnes Bild
-   * @param {string} path 
+   * Loads a single image and assigns it to the object.
+   * @param {string} path - Path to the image file.
    */
   loadImage(path) {
     this.img = new Image();
@@ -40,8 +40,8 @@ class DrawableObject {
   }
 
   /**
-   * Lädt mehrere Bilder und cached sie
-   * @param {string[]} arr 
+   * Loads multiple images and stores them in the image cache.
+   * @param {string[]} arr - Array of image paths.
    */
   loadImages(arr) {
     arr.forEach((path) => {

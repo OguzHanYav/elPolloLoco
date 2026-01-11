@@ -1,40 +1,90 @@
 /**
- * Hauptcharakter des Spiels
+ * Represents the main playable character of the game.
+ * Handles movement, animations, states and interactions.
  * @extends MovableObject
  */
 class Character extends MovableObject {
+
   height = 250;
+
+
   width = 120;
+
+
   world;
+
+
   speed = 10;
+
+
   lastHit = 0;
+
+
   deadAnimationFinished = false;
+
+
   isDeadCharacter = false;
 
+
   idleStarttime = 0;
+
+
   isLongIdle = false;
+
+
   jumpKeyPressed = false;
+
+
   isJumpingAnimationPlaying = false;
+
+
   wasInAir = false;
 
+
   currentAnimation = null;
+
+
   currentImage = 0;
 
+
   lastIdleAnimationTime = 0;
+
+
   lastLongIdleAnimationTime = 0;
+
+
   lastWalkAnimationTime = 0;
+
+
   lastJumpAnimationTime = 0;
+
+
   lastHurtAnimationTime = 0;
+
+
   deadAnimationTime = 0;
 
+
   animationIntervalIdle = 300;
+
+
   animationIntervalLongIdle = 400;
+
+
   jumpAnimationInterval = 100;
+
+
   hurtAnimationInterval = 150;
+
+
   hurtAnimationDuration = 500;
+
+
   hurtStartTime = 0;
 
+
   offset = { top: 100, bottom: 10, left: 30, right: 20 };
+
 
   IMAGES_WALKING = [
     'img/2_character_pepe/2_walk/W-21.png',
@@ -42,8 +92,9 @@ class Character extends MovableObject {
     'img/2_character_pepe/2_walk/W-23.png',
     'img/2_character_pepe/2_walk/W-24.png',
     'img/2_character_pepe/2_walk/W-25.png',
-    'img/2_character_pepe/2_walk/W-26.png',
+    'img/2_character_pepe/2_walk/W-26.png'
   ];
+
 
   IMAGES_JUMPING = [
     'img/2_character_pepe/3_jump/J-31.png',
@@ -54,8 +105,9 @@ class Character extends MovableObject {
     'img/2_character_pepe/3_jump/J-36.png',
     'img/2_character_pepe/3_jump/J-37.png',
     'img/2_character_pepe/3_jump/J-38.png',
-    'img/2_character_pepe/3_jump/J-39.png',
+    'img/2_character_pepe/3_jump/J-39.png'
   ];
+
 
   IMAGES_DEAD = [
     'img/2_character_pepe/5_dead/D-51.png',
@@ -63,14 +115,16 @@ class Character extends MovableObject {
     'img/2_character_pepe/5_dead/D-53.png',
     'img/2_character_pepe/5_dead/D-54.png',
     'img/2_character_pepe/5_dead/D-55.png',
-    'img/2_character_pepe/5_dead/D-56.png',
+    'img/2_character_pepe/5_dead/D-56.png'
   ];
+
 
   IMAGES_HURT = [
     'img/2_character_pepe/4_hurt/H-41.png',
     'img/2_character_pepe/4_hurt/H-42.png',
-    'img/2_character_pepe/4_hurt/H-43.png',
+    'img/2_character_pepe/4_hurt/H-43.png'
   ];
+
 
   IMAGES_IDLE = [
     'img/2_character_pepe/1_idle/idle/I-1.png',
@@ -82,8 +136,9 @@ class Character extends MovableObject {
     'img/2_character_pepe/1_idle/idle/I-7.png',
     'img/2_character_pepe/1_idle/idle/I-8.png',
     'img/2_character_pepe/1_idle/idle/I-9.png',
-    'img/2_character_pepe/1_idle/idle/I-10.png',
+    'img/2_character_pepe/1_idle/idle/I-10.png'
   ];
+
 
   IMAGES_LONG_IDLE = [
     'img/2_character_pepe/1_idle/long_idle/I-11.png',
@@ -95,12 +150,12 @@ class Character extends MovableObject {
     'img/2_character_pepe/1_idle/long_idle/I-17.png',
     'img/2_character_pepe/1_idle/long_idle/I-18.png',
     'img/2_character_pepe/1_idle/long_idle/I-19.png',
-    'img/2_character_pepe/1_idle/long_idle/I-20.png',
+    'img/2_character_pepe/1_idle/long_idle/I-20.png'
   ];
 
   /**
-   * Erstellt den Hauptcharakter
-   * @param {World} world - Die Spielwelt, in der der Charakter agiert
+   * Creates the main character instance.
+   * @param {World} world - The game world the character belongs to.
    */
   constructor(world) {
     super().loadImage('img/2_character_pepe/1_idle/idle/I-1.png');
@@ -117,7 +172,7 @@ class Character extends MovableObject {
   }
 
   /**
-   * Steuerung der Bewegung und Kamera
+   * Handles movement input and camera positioning.
    */
   animate() {
     setInterval(() => {
@@ -150,7 +205,7 @@ class Character extends MovableObject {
   }
 
   /**
-   * Aktualisiert die Animationen abhängig vom Zustand (Gehen, Springen, Idle, Treffer, Tod)
+   * Updates the current animation based on character state.
    */
   updateAnimation() {
     if (this.world.gameStopped) return;
@@ -173,9 +228,7 @@ class Character extends MovableObject {
       return;
     }
 
-    if (this.isHurt()) {
-      this.playHurtAnimation();
-    }
+    if (this.isHurt()) this.playHurtAnimation();
 
     if (this.isAboveGround()) {
       this.playJumpAnimation();
@@ -201,11 +254,17 @@ class Character extends MovableObject {
     else this.playIdleAnimation();
   }
 
+  /**
+   * Resets idle timers and states.
+   */
   resetIdleState() {
     this.idleStarttime = null;
     this.isLongIdle = false;
   }
 
+  /**
+   * Plays the death animation.
+   */
   playDeadAnimation() {
     const now = Date.now();
     if (now - this.deadAnimationTime < 300) return;
@@ -215,6 +274,9 @@ class Character extends MovableObject {
     this.deadAnimationFinished = this.currentImage === this.IMAGES_DEAD.length - 1;
   }
 
+  /**
+   * Plays the jump animation.
+   */
   playJumpAnimation() {
     const now = Date.now();
     if (!this.lastJumpAnimationTime) this.lastJumpAnimationTime = now;
@@ -224,49 +286,59 @@ class Character extends MovableObject {
     this.img = this.imageCache[this.IMAGES_JUMPING[this.currentImage]];
   }
 
+  /**
+   * Plays the walking animation.
+   */
   playWalkAnimation() {
     const now = Date.now();
     if (!this.lastWalkAnimationTime) this.lastWalkAnimationTime = now;
     if (now - this.lastWalkAnimationTime < 1000 / 30) return;
     this.lastWalkAnimationTime = now;
-    if (this.currentImage < this.IMAGES_WALKING.length - 1) this.currentImage++;
-    else this.currentImage = 0;
+    this.currentImage = (this.currentImage + 1) % this.IMAGES_WALKING.length;
     this.img = this.imageCache[this.IMAGES_WALKING[this.currentImage]];
   }
 
+  /**
+   * Plays the idle animation.
+   */
   playIdleAnimation() {
     const now = Date.now();
     if (!this.lastIdleAnimationTime) this.lastIdleAnimationTime = now;
     if (now - this.lastIdleAnimationTime < this.animationIntervalIdle) return;
     this.lastIdleAnimationTime = now;
-    if (this.currentImage < this.IMAGES_IDLE.length - 1) this.currentImage++;
-    else this.currentImage = 0;
+    this.currentImage = (this.currentImage + 1) % this.IMAGES_IDLE.length;
     this.img = this.imageCache[this.IMAGES_IDLE[this.currentImage]];
   }
 
+  /**
+   * Plays the long idle animation.
+   */
   playLongIdleAnimation() {
     const now = Date.now();
     if (!this.lastLongIdleAnimationTime) this.lastLongIdleAnimationTime = now;
     if (now - this.lastLongIdleAnimationTime < this.animationIntervalLongIdle) return;
     this.lastLongIdleAnimationTime = now;
-    if (this.currentImage < this.IMAGES_LONG_IDLE.length - 1) this.currentImage++;
-    else this.currentImage = 0;
+    this.currentImage = (this.currentImage + 1) % this.IMAGES_LONG_IDLE.length;
     this.img = this.imageCache[this.IMAGES_LONG_IDLE[this.currentImage]];
   }
 
+  /**
+   * Plays the hurt animation.
+   */
   playHurtAnimation() {
     const now = Date.now();
     if (!this.hurtStartTime) this.hurtStartTime = now;
     if (!this.lastHurtAnimationTime) this.lastHurtAnimationTime = now;
     if (now - this.lastHurtAnimationTime < this.hurtAnimationInterval) return;
     this.lastHurtAnimationTime = now;
+
     if (now - this.hurtStartTime > this.hurtAnimationDuration) {
       this.hurtStartTime = 0;
       this.currentImage = 0;
       return;
     }
-    if (this.currentImage < this.IMAGES_HURT.length - 1) this.currentImage++;
-    else this.currentImage = 0;
+
+    this.currentImage = (this.currentImage + 1) % this.IMAGES_HURT.length;
     this.img = this.imageCache[this.IMAGES_HURT[this.currentImage]];
   }
 }

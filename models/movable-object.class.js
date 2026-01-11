@@ -1,5 +1,5 @@
 /**
- * Objekte, die sich bewegen oder Gravitation haben
+ * Base class for all movable objects with gravity and collision handling.
  * @extends DrawableObject
  */
 class MovableObject extends DrawableObject {
@@ -14,7 +14,8 @@ class MovableObject extends DrawableObject {
   offset = { top: 0, bottom: 0, left: 0, right: 0 };
 
   /**
-   * @param {number} groundY Boden-Höhe (y-Wert)
+   * Creates a movable object.
+   * @param {number} groundY - Y position of the ground.
    */
   constructor(groundY = 430) {
     super();
@@ -24,14 +25,17 @@ class MovableObject extends DrawableObject {
   }
 
   /**
-   * Wendet Gravitation auf das Objekt an
+   * Applies gravity to the object.
    */
   applyGravity() {
     if (this.gravityInterval) return;
+
     this.gravityInterval = setInterval(() => {
       if (this.isDeadCharacter) return;
+
       this.y -= this.speedY;
       this.speedY -= this.acceleration;
+
       if (this.y + this.height >= this.groundY) {
         this.y = this.groundY - this.height;
         this.speedY = 0;
@@ -40,7 +44,7 @@ class MovableObject extends DrawableObject {
   }
 
   /**
-   * Stoppt Gravitation
+   * Stops gravity effect.
    */
   stopGravity() {
     if (this.gravityInterval) {
@@ -50,30 +54,70 @@ class MovableObject extends DrawableObject {
     this.speedY = 0;
   }
 
-  moveRight() { this.x += this.speed; }
-  moveLeft() { this.x -= this.speed; }
+  /**
+   * Moves the object to the right.
+   */
+  moveRight() {
+    this.x += this.speed;
+  }
 
   /**
-   * Spielt Animation aus dem übergebenen Bilder-Array ab
-   * @param {string[]} images Array von Bildpfaden
+   * Moves the object to the left.
+   */
+  moveLeft() {
+    this.x -= this.speed;
+  }
+
+  /**
+   * Plays an animation using the given image array.
+   * @param {string[]} images - Animation image paths.
    */
   playAnimation(images) {
     if (!images || images.length === 0) return;
+
     let i = this.currentImage % images.length;
     let path = images[i];
-    if (this.imageCache[path]) this.img = this.imageCache[path];
+
+    if (this.imageCache[path]) {
+      this.img = this.imageCache[path];
+    }
+
     this.currentImage++;
   }
 
-  jump() { this.speedY = 30; }
-  isAboveGround() { return this.y + this.height < this.groundY; }
-  setOnGround() { this.y = this.groundY - this.height; }
-  updatePrevY() { this.prevY = this.y; }
+  /**
+   * Makes the object jump.
+   */
+  jump() {
+    this.speedY = 30;
+  }
 
   /**
-   * Prüft Kollision mit anderem MovableObject
-   * @param {MovableObject} mo
-   * @returns {boolean} True, wenn eine Kollision vorliegt
+   * Checks if the object is above the ground.
+   * @returns {boolean}
+   */
+  isAboveGround() {
+    return this.y + this.height < this.groundY;
+  }
+
+  /**
+   * Places the object exactly on the ground.
+   */
+  setOnGround() {
+    this.y = this.groundY - this.height;
+  }
+
+  /**
+   * Stores the previous Y position.
+   */
+  updatePrevY() {
+    this.prevY = this.y;
+  }
+
+  /**
+   * Checks collision with another movable object.
+   * @param {MovableObject} mo - The object to check collision with.
+   * @returns {boolean}
    */
   isColliding(mo) {
     return (
@@ -85,27 +129,34 @@ class MovableObject extends DrawableObject {
   }
 
   /**
-   * Objekt nimmt Schaden
+   * Reduces energy when the object gets hit.
    */
   hit() {
     const now = new Date().getTime();
+
     if (now - this.lastHit > 300) {
       if (this.world) AudioManager.play(this.world.hitCharacterSound);
+
       this.energy -= 5;
       if (this.energy < 0) this.energy = 0;
+
       this.lastHit = now;
     }
   }
 
   /**
-   * Prüft, ob Objekt tot ist
+   * Checks whether the object is dead.
    * @returns {boolean}
    */
-  isDead() { return this.energy <= 0; }
+  isDead() {
+    return this.energy <= 0;
+  }
 
   /**
-   * Prüft, ob Objekt gerade Schaden erlitten hat
+   * Checks whether the object is currently hurt.
    * @returns {boolean}
    */
-  isHurt() { return new Date().getTime() - this.lastHit < 500; }
+  isHurt() {
+    return new Date().getTime() - this.lastHit < 500;
+  }
 }

@@ -1,7 +1,7 @@
 /**
- * Erstellt und gibt das erste Level des Spiels zurück
- * 
- * @returns {Level} Level-Objekt mit Gegnern, Clouds und Hintergrundobjekten
+ * Creates and returns the first level of the game.
+ *
+ * @returns {Level} Level object containing enemies, clouds and background objects
  */
 function createLevel1() {
   return new Level(
@@ -35,37 +35,21 @@ function createLevel1() {
       new BackgroundObject("img/5_background/layers/3_third_layer/1.png", 0),
       new BackgroundObject("img/5_background/layers/2_second_layer/1.png", 0),
       new BackgroundObject("img/5_background/layers/1_first_layer/1.png", 0),
+
       new BackgroundObject("img/5_background/layers/air.png", 719),
       new BackgroundObject("img/5_background/layers/3_third_layer/2.png", 719),
       new BackgroundObject("img/5_background/layers/2_second_layer/2.png", 719),
       new BackgroundObject("img/5_background/layers/1_first_layer/2.png", 719),
 
       new BackgroundObject("img/5_background/layers/air.png", 719 * 2),
-      new BackgroundObject(
-        "img/5_background/layers/3_third_layer/1.png",
-        719 * 2
-      ),
-      new BackgroundObject(
-        "img/5_background/layers/2_second_layer/1.png",
-        719 * 2
-      ),
-      new BackgroundObject(
-        "img/5_background/layers/1_first_layer/1.png",
-        719 * 2
-      ),
+      new BackgroundObject("img/5_background/layers/3_third_layer/1.png", 719 * 2),
+      new BackgroundObject("img/5_background/layers/2_second_layer/1.png", 719 * 2),
+      new BackgroundObject("img/5_background/layers/1_first_layer/1.png", 719 * 2),
+
       new BackgroundObject("img/5_background/layers/air.png", 719 * 3),
-      new BackgroundObject(
-        "img/5_background/layers/3_third_layer/2.png",
-        719 * 3
-      ),
-      new BackgroundObject(
-        "img/5_background/layers/2_second_layer/2.png",
-        719 * 3
-      ),
-      new BackgroundObject(
-        "img/5_background/layers/1_first_layer/2.png",
-        719 * 3
-      ),
+      new BackgroundObject("img/5_background/layers/3_third_layer/2.png", 719 * 3),
+      new BackgroundObject("img/5_background/layers/2_second_layer/2.png", 719 * 3),
+      new BackgroundObject("img/5_background/layers/1_first_layer/2.png", 719 * 3),
     ]
   );
 }

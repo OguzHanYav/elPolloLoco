@@ -1,17 +1,20 @@
 /**
- * Huhn-Gegner
+ * Chicken enemy
  * @extends MovableObject
  */
 class Chicken extends MovableObject {
   height = 90;
   width = 90;
+
   IMAGES_WALKING = [
-    `img/3_enemies_chicken/chicken_normal/1_walk/1_w.png`,
-    `img/3_enemies_chicken/chicken_normal/1_walk/2_w.png`,
-    `img/3_enemies_chicken/chicken_normal/1_walk/3_w.png`,
+    'img/3_enemies_chicken/chicken_normal/1_walk/1_w.png',
+    'img/3_enemies_chicken/chicken_normal/1_walk/2_w.png',
+    'img/3_enemies_chicken/chicken_normal/1_walk/3_w.png',
   ];
 
-  IMAGES_DEAD = [`img/3_enemies_chicken/chicken_normal/2_dead/dead.png`];
+  IMAGES_DEAD = [
+    'img/3_enemies_chicken/chicken_normal/2_dead/dead.png',
+  ];
 
   offset = {
     top: 10,
@@ -26,13 +29,10 @@ class Chicken extends MovableObject {
   lastAnimationTime = 0;
 
   /**
-   * Erstellt ein Chicken-Objekt
-   * @param {number} x Startposition X
-   * @param {number} y Startposition Y
-   * @param {World} world Spielwelt
+   * Creates a chicken enemy with random position and speed.
    */
   constructor() {
-    super().loadImage(`img/3_enemies_chicken/chicken_normal/1_walk/1_w.png`);
+    super().loadImage('img/3_enemies_chicken/chicken_normal/1_walk/1_w.png');
     this.loadImages(this.IMAGES_WALKING);
     this.loadImages(this.IMAGES_DEAD);
     this.x = 700 + Math.random() * 1200;
@@ -42,8 +42,8 @@ class Chicken extends MovableObject {
   }
 
   /**
-   * Aktualisiert die Animation des Huhns
-   * @param {number} now Aktuelle Zeit in ms
+   * Updates movement and animation state.
+   * @param {number} now Current timestamp in milliseconds
    */
   updateAnimation(now) {
     if (this.isDeadChicken) {
@@ -59,7 +59,7 @@ class Chicken extends MovableObject {
   }
 
   /**
-   * Setzt das Chicken in den Todeszustand
+   * Sets the chicken into the dead state.
    */
   die() {
     this.isDeadChicken = true;
@@ -67,14 +67,14 @@ class Chicken extends MovableObject {
   }
 
   /**
-   * Behandelt Treffer auf das Chicken
+   * Handles a hit on the chicken.
    */
   hit() {
     if (!this.isDeadChicken) this.die();
   }
 
   /**
-   * Spielt die Todesanimation ab und entfernt das Chicken nach 1 Sekunde
+   * Plays the death animation and removes the chicken after a delay.
    */
   handleDeathAnimation() {
     if (!this.deadAnimationFinished) {

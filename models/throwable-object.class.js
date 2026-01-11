@@ -1,5 +1,5 @@
 /**
- * Werfbares Objekt (z.B. Flasche)
+ * Throwable object (e.g. bottle).
  * @extends MovableObject
  */
 class ThrowableObject extends MovableObject {
@@ -21,9 +21,10 @@ class ThrowableObject extends MovableObject {
   ];
 
   /**
-   * @param {number} x Startposition X
-   * @param {number} y Startposition Y
-   * @param {boolean} [throwLeft=false] Richtung links werfen
+   * Creates a new throwable object.
+   * @param {number} x - Start X position.
+   * @param {number} y - Start Y position.
+   * @param {boolean} [throwLeft=false] - Whether the object is thrown to the left.
    */
   constructor(x, y, throwLeft = false) {
     super();
@@ -40,7 +41,7 @@ class ThrowableObject extends MovableObject {
   }
 
   /**
-   * Startet den Wurf und Animationen
+   * Starts the throw movement and all related animations.
    */
   throw() {
     this.speedY = 25;
@@ -52,23 +53,29 @@ class ThrowableObject extends MovableObject {
     }, 50);
   }
 
-  /** Spielt Rotationsanimation ab */
+  /**
+   * Plays the bottle rotation animation while flying.
+   */
   throwAnimation() {
     this.rotationInvterval = setInterval(() => {
       this.playAnimation(this.rotationImages);
     }, 100);
   }
 
-  /** Bewegt das Objekt nach links oder rechts */
+  /**
+   * Moves the object horizontally while it is thrown.
+   */
   throwInterval() {
     this.moveInterval = setInterval(() => {
       if (!this.isBroken) {
-        this.x += this.throwLeft ? - this.speedX : this.speedX;
+        this.x += this.throwLeft ? -this.speedX : this.speedX;
       }
     }, 25);
   }
 
-  /** Prüft, ob das Objekt den Boden erreicht */
+  /**
+   * Checks whether the object has hit the ground.
+   */
   checkSplash() {
     const groundY = 400;
     if (this.y > groundY && !this.isBroken) {
@@ -77,9 +84,9 @@ class ThrowableObject extends MovableObject {
   }
 
   /**
-   * Spielt die Splash-/Zerbruchsanimation ab
-   * @param {number} [collisionX] Optional X-Koordinate des Aufpralls
-   * @param {number} [collisionY] Optional Y-Koordinate des Aufpralls
+   * Plays the splash / break animation.
+   * @param {number} [collisionX] - Optional X position of the collision.
+   * @param {number} [collisionY] - Optional Y position of the collision.
    */
   playSplashAnimation(collisionX, collisionY) {
     this.isBroken = true;
@@ -90,6 +97,7 @@ class ThrowableObject extends MovableObject {
     clearInterval(this.moveInterval);
     clearInterval(this.splashCheckInterval);
     this.stopGravity();
+
     if (collisionY) this.y = collisionY;
     if (collisionX) this.x = collisionX;
 
