@@ -221,6 +221,8 @@ class World {
             enemy.hit();
             enemy.triggerAttack();
             this.endbossBar.setPercentage(enemy.energy);
+          }else{
+            enemy.die();
           }
         }
       });
@@ -266,25 +268,33 @@ class World {
    * Draws all game objects on the canvas.
    */
   draw() {
-    this.throwableObjects = this.throwableObjects.filter(b => !b.markedForRemoval);
-    if (this.gameStopped) return;
-    this.clearCanvas();
-    this.ctx.translate(this.camera_x, 0);
-    this.addObjectsToMap(this.level.backgroundObjects);
-    this.ctx.translate(-this.camera_x, 0);
-    this.addToMap(this.statusBar);
-    this.addToMap(this.coinBar);
-    this.addToMap(this.bottleBar);
-    this.addToMap(this.endbossBar);
-    this.ctx.translate(this.camera_x, 0);
-    this.addObjectsToMap(this.level.clouds);
-    this.addObjectsToMap(this.collectables);
-    this.addObjectsToMap(this.level.enemies);
-    this.addObjectsToMap(this.throwableObjects);
-    this.addToMap(this.character);
-    this.ctx.translate(-this.camera_x, 0);
-    this.animationFrameId = requestAnimationFrame(() => this.draw());
-  }
+  this.throwableObjects = this.throwableObjects.filter(b => !b.markedForRemoval);
+  if (this.gameStopped) return;
+
+  this.clearCanvas();
+
+  // 🔵 WORLD (mit Kamera)
+  this.ctx.save();
+  this.ctx.translate(this.camera_x, 0);
+
+  this.addObjectsToMap(this.level.backgroundObjects);
+  this.addObjectsToMap(this.level.clouds);
+  this.addObjectsToMap(this.collectables);
+  this.addObjectsToMap(this.level.enemies);
+  this.addObjectsToMap(this.throwableObjects);
+  this.addToMap(this.character);
+
+  this.ctx.restore();
+
+  // 🟢 UI (OHNE Kamera!)
+  this.addToMap(this.statusBar);
+  this.addToMap(this.coinBar);
+  this.addToMap(this.bottleBar);
+  this.addToMap(this.endbossBar);
+
+  this.animationFrameId = requestAnimationFrame(() => this.draw());
+}
+
 
   /**
    * Draws multiple objects on the canvas.

@@ -31,7 +31,7 @@ class Character extends MovableObject {
   hurtAnimationInterval = 150;
   hurtAnimationDuration = 500;
   hurtStartTime = 0;
-  offset = { top: 100, bottom: 10, left: 30, right: 20 };
+  offset = { top: 100, bottom: 10, left: 30, right: 40 };
 
   IMAGES_WALKING = [
     'img/2_character_pepe/2_walk/W-21.png',

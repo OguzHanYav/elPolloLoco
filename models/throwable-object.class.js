@@ -77,11 +77,15 @@ class ThrowableObject extends MovableObject {
    * Checks whether the object has hit the ground.
    */
   checkSplash() {
-    const groundY = 400;
-    if (this.y > groundY && !this.isBroken) {
+    if (
+      !this.isBroken &&
+      this.speedY === 0 &&
+      this.y + this.height >= this.groundY
+    ) {
       this.playSplashAnimation();
     }
   }
+
 
   /**
    * Plays the splash / break animation.
@@ -90,17 +94,14 @@ class ThrowableObject extends MovableObject {
    */
   playSplashAnimation(collisionX, collisionY) {
     this.isBroken = true;
+    this.speedX = 0;
     this.splashActive = true;
-    this.markedForRemoval = false;
-
     clearInterval(this.rotationInvterval);
     clearInterval(this.moveInterval);
     clearInterval(this.splashCheckInterval);
     this.stopGravity();
-
     if (collisionY) this.y = collisionY;
     if (collisionX) this.x = collisionX;
-
     let i = 0;
     const splashInterval = setInterval(() => {
       if (i < this.splashImages.length) {

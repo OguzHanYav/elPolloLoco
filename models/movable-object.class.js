@@ -11,7 +11,7 @@ class MovableObject extends DrawableObject {
   lastHit = 0;
   static nextId = 1;
   gravityInterval = null;
-  offset = { top: 0, bottom: 0, left: 0, right: 0 };
+  offset = { top: 80, bottom: 20, left: 20, right: 20 };
 
   /**
    * Creates a movable object.
@@ -32,7 +32,7 @@ class MovableObject extends DrawableObject {
 
     this.gravityInterval = setInterval(() => {
       if (this.isDeadCharacter) return;
-
+      this.prevY = this.y;
       this.y -= this.speedY;
       this.speedY -= this.acceleration;
 

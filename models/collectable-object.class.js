@@ -16,7 +16,7 @@ class CollectableObjectBottle extends MovableObject {
     this.y = y;
     this.width = 60;
     this.height = 70;
-    this.offset = { top: 20, bottom: 20, left: 20, right: 20 };
+    this.offset = { top: 5, bottom: 5, left: 30, right: 20 };
   }
 }
 
@@ -38,6 +38,6 @@ class CollectableObjectCoin extends MovableObject {
     this.y = y;
     this.width = 100;
     this.height = 90;
-    this.offset = { top: 20, bottom: 20, left: 20, right: 20 };
+    this.offset = { top: 30, bottom: 30, left: 30, right: 30 };
   }
 }
