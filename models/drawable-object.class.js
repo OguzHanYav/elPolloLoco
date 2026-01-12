@@ -25,21 +25,11 @@ class DrawableObject {
    * Draws an optional frame around the object (used for debugging).
    * @param {CanvasRenderingContext2D} ctx - The rendering context.
    */
-  // drawFrame(ctx) {
-  //   ctx.beginPath();
-  //   ctx.stroke();
-  // }
   drawFrame(ctx) {
-  ctx.strokeStyle = "red";
-  ctx.strokeRect(
-    this.x + this.offset.left,
-    this.y + this.offset.top,
-    this.width - this.offset.left - this.offset.right,
-    this.height - this.offset.top - this.offset.bottom
-  );
-}
-
-
+    ctx.beginPath();
+    ctx.stroke();
+  }
+  
   /**
    * Loads a single image and assigns it to the object.
    * @param {string} path - Path to the image file.
